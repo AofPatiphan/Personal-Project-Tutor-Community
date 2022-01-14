@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f1f2f6 !important;
+}
+
+.loginbd {
+    height: 100vh;
+    display: flex;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 55%;
+    height: 100vh;
+    padding: 300px 200px;
+}
+
+.loginform {
+    display: flex;
+    margin-right: 200px;
+    justify-content: center;
+    align-items: center;
+    width: 45%;
+    height: 100vh;
+    /* background-color: lightgoldenrodyellow; */
+}
+
+.loginformcontainer {
+    width: 508px;
+    height: 604px;
+    background-color: white;
+    border-radius: 20px;
+}
+
+.textLogo {
+    padding-top: 30px !important;
+    padding-left: 50px !important;
+    font-size: 4rem !important;
+    color: #1690eb;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.signInText {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding-top: 50px !important;
+    color: #1690eb;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.signInText h1 {
+    font-size: 4em;
+}
+
+.registerText {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+    padding-top: 50px !important;
+    color: #1690eb;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.registerText h1 {
+    font-size: 3.5em;
+}
+
+.inputRegister {
+    margin-bottom: 20px !important;
+}

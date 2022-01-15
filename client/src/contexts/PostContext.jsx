@@ -1,7 +1,7 @@
 import axios from '../config/axios';
 import { createContext, useState, useEffect } from 'react';
 import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import { AuthContext } from './AuthContext';
 
 const PostContext = createContext();
 

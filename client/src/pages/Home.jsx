@@ -5,10 +5,12 @@ import Postbar from '../components/Postbar';
 import { useContext } from 'react';
 import { PostContext } from '../contexts/PostContext';
 import PostItemHome from '../components/PostItemHome';
+import { CommentContext } from '../contexts/CommentContext';
 
 function Home() {
     const location = useLocation();
     const { postHome } = useContext(PostContext);
+
     return (
         <>
             <Header />
@@ -24,7 +26,7 @@ function Home() {
                 </div>
                 <Postbar />
                 {postHome.map((el) => {
-                    return <PostItemHome postItemHome={el} key={el.id} />;
+                    return <PostItemHome postitemHome={el} key={el.id} />;
                 })}
             </div>
         </>

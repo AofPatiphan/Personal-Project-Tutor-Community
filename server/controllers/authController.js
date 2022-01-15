@@ -4,7 +4,14 @@ const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res, next) => {
     try {
-        const { username, email, password, confirmPassword } = req.body;
+        const {
+            firstName,
+            lastName,
+            username,
+            email,
+            password,
+            confirmPassword,
+        } = req.body;
 
         if (password !== confirmPassword)
             return res.status(400).json({ message: 'password did not match' });
@@ -21,7 +28,13 @@ exports.register = async (req, res, next) => {
         }
 
         const hashed = await bcrypt.hash(password, 12);
-        await User.create({ username, email, password: hashed });
+        await User.create({
+            firstName,
+            lastName,
+            username,
+            email,
+            password: hashed,
+        });
 
         res.json({ message: 'user created', username, email });
     } catch (err) {
@@ -50,6 +63,8 @@ exports.login = async (req, res, next) => {
 
         // jwt
         const payload = {
+            firstName: user.firstName,
+            lastName: user.lastName,
             id: user.id,
             email: user.email,
             username: user.username,

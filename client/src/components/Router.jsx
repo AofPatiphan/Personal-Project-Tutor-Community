@@ -25,6 +25,7 @@ const routes = {
 function Router() {
     const { user } = useContext(AuthContext);
     const role = user ? 'user' : 'guest';
+    console.log(role);
     return (
         <Routes>
             {routes[role].map((item) => (

@@ -28,9 +28,13 @@ function AuthContextProvider(props) {
         navigate('/login');
     };
 
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleSubmitLogin = (e) => {
         e.preventDefault();
@@ -45,6 +49,36 @@ function AuthContextProvider(props) {
                 setTimeout(() => setError(''), 5000);
             });
     };
+
+    const handleSubmitRegister = (e) => {
+        e.preventDefault();
+        axios
+            .post('/auth/register', {
+                firstName,
+                lastName,
+                username,
+                email,
+                password,
+                confirmPassword,
+            })
+            .then((res) => {
+                navigate('/login');
+            })
+            .catch((err) => {
+                console.log(err);
+                setError('Pleast completed form');
+                // setTimeout(() => setError(''), 5000);
+            });
+
+        // .then((res) => {
+        //     navigate('/login');
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        //     setError('Pleast completed form');
+        //     // setTimeout(() => setError(''), 5000);
+        // });
+    };
     return (
         <AuthContext.Provider
             value={{
@@ -57,8 +91,17 @@ function AuthContextProvider(props) {
                 error,
                 setError,
                 handleSubmitLogin,
+                handleSubmitRegister,
                 login,
                 logout,
+                firstName,
+                setFirstName,
+                lastName,
+                setLastName,
+                confirmPassword,
+                setConfirmPassword,
+                username,
+                setUsername,
             }}
         >
             {props.children}

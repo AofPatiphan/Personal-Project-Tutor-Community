@@ -9,7 +9,8 @@ function PostContextProvider(props) {
     const [postHome, setPostHome] = useState([]);
     const [postProfile, setPostProfile] = useState([]);
     const [title, setTitle] = useState('');
-
+    const [visible, serVisible] = useState(false);
+    const [hideboxPost, setHideboxPost] = useState(false);
     // Get data home
     useEffect(() => {
         const fetchPost = async () => {
@@ -37,22 +38,22 @@ function PostContextProvider(props) {
         setPostHome(nextPost);
     };
 
-    // const updateTodo = async (id, value) => {
-    //     const idx = todoList.findIndex((item) => item.id === id);
-    //     const newTodoList = [...todoList];
-    //     if (idx !== -1) {
-    //         newTodoList[idx] = { ...newTodoList[idx], ...{ title: value } };
-    //     }
-    //     console.log(newTodoList[idx]);
-    //     const res = await axios.put(`/post/${id}`, newTodoList[idx]);
-    //     setTodoList(newTodoList);
-    // };
+    const updatePost = async (id, value) => {
+        const idx = postHome.findIndex((item) => item.id === id);
+        const newPost = [...postHome];
+        if (idx !== -1) {
+            newPost[idx] = { ...newPost[idx], ...{ postContent: value } };
+        }
+        console.log(newPost[idx]);
+        const res = await axios.put(`/post/${id}`, newPost[idx]);
+        setPostHome(newPost);
+    };
 
-    // const deleteTodo = async (id) => {
-    //     const res = await axios.delete(`/post/${id}`);
-    //     const newTodo = todoList.filter((item) => item.id !== id);
-    //     setTodoList(newTodo);
-    // };
+    const deletePost = async (id) => {
+        const res = await axios.delete(`/post/${id}`);
+        const newPost = postHome.filter((item) => item.id !== id);
+        setPostHome(newPost);
+    };
 
     return (
         <PostContext.Provider
@@ -62,15 +63,12 @@ function PostContextProvider(props) {
                 addPost,
                 title,
                 setTitle,
-                // todoList,
-                // addTodo,
-                // setTodoList,
-                // updateTodo,
-                // deleteTodo,
-                // text,
-                // setText,
-                // status,
-                // setStatus,
+                updatePost,
+                deletePost,
+                visible,
+                serVisible,
+                hideboxPost,
+                setHideboxPost,
             }}
         >
             {props.children}

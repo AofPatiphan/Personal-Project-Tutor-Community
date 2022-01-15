@@ -4,7 +4,6 @@ const { Post } = require('../models/index');
 exports.getAllPost = async (req, res, next) => {
     try {
         const posts = await Post.findAll({ order: [['createdAt', 'DESC']] });
-        console.log(posts);
         res.status(200).json({ posts });
     } catch (err) {
         next(err);
@@ -53,7 +52,6 @@ exports.createPost = async (req, res, next) => {
             postContent,
             userId: payload.id,
         });
-        console.log(post);
         res.status(201).json({ post });
     } catch (err) {
         next(err);

@@ -1,11 +1,29 @@
 import React from 'react';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 
 function RegisterBox() {
+    const {
+        email,
+        setEmail,
+        password,
+        setPassword,
+        error,
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
+        confirmPassword,
+        setConfirmPassword,
+        handleSubmitRegister,
+        username,
+        setUsername,
+    } = useContext(AuthContext);
     return (
         <div className="loginform">
             <div className="loginformcontainer p-5">
-                <form action="">
+                <form onSubmit={handleSubmitRegister}>
                     <div
                         style={{
                             display: 'flex',
@@ -18,8 +36,6 @@ function RegisterBox() {
                             <input
                                 type="radio"
                                 className="btn-check"
-                                name="options-outlined"
-                                id="success-outlined"
                                 autoComplete="off"
                                 defaultChecked
                             />
@@ -41,8 +57,6 @@ function RegisterBox() {
                                 <input
                                     type="radio"
                                     className="btn-check"
-                                    name="options-outlined"
-                                    id="danger-outlined"
                                     autoComplete="off"
                                 />
                                 <label
@@ -61,64 +75,80 @@ function RegisterBox() {
                     <div className="mt-2">
                         <div className="mb-4 d-flex " style={{ gap: '20px' }}>
                             <input
-                                type="email"
+                                type="text"
                                 className="form-control"
-                                id="exampleInputEmail1"
-                                aria-describedby="emailHelp"
                                 style={{
                                     borderRadius: '10px',
                                     background: '#1690EB20',
                                 }}
                                 placeholder="First name"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
                             />
 
                             <input
-                                type="email"
+                                type="text"
                                 className="form-control"
-                                id="exampleInputEmail1"
-                                aria-describedby="emailHelp"
                                 style={{
                                     borderRadius: '10px',
                                     background: '#1690EB20',
                                 }}
                                 placeholder="Last name"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
                             />
                         </div>
                         <div className="mb-4 ">
                             <input
-                                type="password"
+                                type="text"
                                 className="form-control"
-                                id="exampleInputPassword1"
+                                style={{
+                                    borderRadius: '10px',
+                                    background: '#1690EB20',
+                                }}
+                                placeholder="Username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </div>
+                        <div className="mb-4 ">
+                            <input
+                                type="text"
+                                className="form-control"
                                 style={{
                                     borderRadius: '10px',
                                     background: '#1690EB20',
                                 }}
                                 placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <div className="mb-4 d-flex " style={{ gap: '20px' }}>
                             <input
-                                type="email"
+                                type="password"
                                 className="form-control"
-                                id="exampleInputEmail1"
-                                aria-describedby="emailHelp"
                                 style={{
                                     borderRadius: '10px',
                                     background: '#1690EB20',
                                 }}
                                 placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
 
                             <input
-                                type="email"
+                                type="password"
                                 className="form-control"
-                                id="exampleInputEmail1"
-                                aria-describedby="emailHelp"
                                 style={{
                                     borderRadius: '10px',
                                     background: '#1690EB20',
                                 }}
                                 placeholder="Confirm password"
+                                value={confirmPassword}
+                                onChange={(e) =>
+                                    setConfirmPassword(e.target.value)
+                                }
                             />
                         </div>
                         <div className="mb-2 form-check"></div>

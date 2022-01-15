@@ -2,20 +2,6 @@ module.exports = (sequelize, Datatypes) => {
     const About = sequelize.define(
         'About',
         {
-            firstName: {
-                type: Datatypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
-            },
-            lastName: {
-                type: Datatypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
-            },
             picture: {
                 type: Datatypes.STRING,
             },

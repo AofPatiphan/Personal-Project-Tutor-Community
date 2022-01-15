@@ -1,6 +1,16 @@
 import Postblock from './Postblock';
+import { useContext } from 'react';
+import { PostContext } from '../contexts/PostContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 export default function Postbar() {
+    const { setHideboxPost } = useContext(PostContext);
+    const { user } = useContext(AuthContext);
+
+    const handleClickShowPostbox = (e) => {
+        e.preventDefault();
+        setHideboxPost(true);
+    };
     return (
         <div
             style={{
@@ -18,11 +28,9 @@ export default function Postbar() {
             <div>&nbsp;</div>
             <div
                 style={{ paddingLeft: '15px' }}
-                onClick={() =>
-                    (document.getElementById('id01').style.display = 'block')
-                }
+                onClick={handleClickShowPostbox}
             >
-                What’s on you mind, Patiphan?
+                {`What’s on you mind, ${user.firstName}?`}
             </div>
             <div>
                 <i className="bi bi-arrow-up"></i>

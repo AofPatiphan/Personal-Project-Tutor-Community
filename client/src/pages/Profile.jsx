@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { PostContext } from '../contexts/PostContext';
 import ProfileHeader from '../components/ProfileHeader';
 import PostProfile from '../components/PostProfile';
+import PostitemHome from '../components/PostItemHome';
 
 function Profile() {
     const location = useLocation();
@@ -25,7 +26,7 @@ function Profile() {
                 <ProfileHeader />
                 <Postbar />
                 {postProfile.map((el) => {
-                    return <PostItemProfile postItemProfile={el} key={el.id} />;
+                    return <PostitemHome postitemHome={el} key={el.id} />;
                 })}
             </div>
         </>

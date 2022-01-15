@@ -1,7 +1,11 @@
 import Comment from './Comment';
 import PostProfile from './PostProfile';
+import { useContext, useState } from 'react';
+import CommentBar from './CommentBar';
 
 export default function PostItemProfile({ postItemProfile }) {
+    const [visible, setVisible] = useState(false);
+    console.log(postItemProfile);
     return (
         <div
             style={{
@@ -14,7 +18,22 @@ export default function PostItemProfile({ postItemProfile }) {
             }}
         >
             <PostProfile postItemProfile={postItemProfile} />
-            <Comment />
+
+            {/* {visible ? (
+                <CommentBar handleSubmitComment={handleSubmitComment} />
+            ) : (
+                ''
+            )} */}
+
+            {/* {comment.map((el) => {
+                return (
+                    <Comment
+                        commentItem={el}
+                        key={el.id}
+                        postitemHome={postitemHome}
+                    />
+                );
+            })} */}
         </div>
     );
 }

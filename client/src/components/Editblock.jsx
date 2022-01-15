@@ -1,31 +1,36 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { PostContext } from '../contexts/PostContext';
-import { AuthContext } from '../contexts/AuthContext';
+import { UserContext } from '../contexts/UserContext';
 
-function Postblock() {
-    const { title, setTitle, addPost, hideboxPost, setHideboxPost } =
-        useContext(PostContext);
-    const { user } = useContext(AuthContext);
+function Editblock({
+    postitemHome: { id, postContent, userId, setHideboxEdit, hideboxEdit },
+}) {
+    const { updatePost } = useContext(PostContext);
+    const { userData } = useContext(UserContext);
+    const newUser = userData.find(({ id }) => id === userId);
+    const [editText, setEditText] = useState(postContent);
 
-    const handleSubmitPost = (e) => {
+    const handleSubmitEdit = (e) => {
         e.preventDefault();
-        addPost({ title });
-        setTitle('');
-        setHideboxPost(false);
+        if (editText) {
+            updatePost(id, editText);
+            setHideboxEdit(false);
+        }
     };
 
-    const handleClickHideboxPost = (e) => {
+    const handleClickHideModal = (e) => {
         e.preventDefault();
-        setHideboxPost(false);
+        setHideboxEdit(false);
+        setEditText(postContent);
     };
     return (
         <>
             <div
-                id="id01"
+                id="id02"
                 className="w3-modal"
-                style={{ display: `${hideboxPost ? 'block' : 'none'}` }}
+                style={{ display: `${hideboxEdit ? 'block' : 'none'}` }}
             >
                 <div
                     className="w3-modal-content w3-animate-top w3-card-4"
@@ -40,12 +45,12 @@ function Postblock() {
                         style={{ marginBottom: '20px' }}
                     >
                         <span
-                            onClick={handleClickHideboxPost}
+                            onClick={handleClickHideModal}
                             className="w3-button w3-display-topright"
                         >
                             &times;
                         </span>
-                        <h2>Create post</h2>
+                        <h2>Update post</h2>
                     </header>
                     <div className="w3-container" style={{ display: 'flex' }}>
                         <div style={{ flexGrow: '1' }}>
@@ -67,18 +72,18 @@ function Postblock() {
                                 textAlign: 'start',
                             }}
                         >
-                            <h5>{user.firstName}</h5>
+                            <h5>{newUser.firstName}</h5>
                         </div>
                         <div style={{ flexGrow: '10' }}>&nbsp;</div>
                     </div>
-                    <form onSubmit={handleSubmitPost}>
+                    <form onSubmit={handleSubmitEdit}>
                         <div style={{ paddingLeft: '55px' }}>
                             <textarea
                                 className="form-control"
                                 rows="4"
-                                placeholder={`What’s on you mind, ${user.firstName}?`}
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="What’s on you mind, Patiphan?"
+                                value={editText}
+                                onChange={(e) => setEditText(e.target.value)}
                                 style={{ width: '400px', border: '0' }}
                             ></textarea>
                         </div>
@@ -87,7 +92,7 @@ function Postblock() {
                             className="btn btn-primary mb-3"
                             style={{ width: '405px', marginLeft: '25px' }}
                         >
-                            Post
+                            Edit Post
                         </button>
                     </form>
                 </div>
@@ -96,4 +101,4 @@ function Postblock() {
     );
 }
 
-export default Postblock;
+export default Editblock;

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { Comment } = require('../models/index');
+const { Comment, Post } = require('../models/index');
 
 exports.getAllComment = async (req, res, next) => {
     try {
@@ -25,6 +25,7 @@ exports.getCommentById = async (req, res, next) => {
 exports.createComment = async (req, res, next) => {
     try {
         const { commentContent } = req.body;
+        const { id } = req.params;
 
         const { authorization } = req.headers;
         if (!authorization || !authorization.startsWith('Bearer')) {
@@ -38,11 +39,16 @@ exports.createComment = async (req, res, next) => {
         }
 
         const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+        const pId = await Post.findOne({
+            where: { id },
+        });
+
         const comment = await Comment.create({
             commentContent,
             userId: payload.id,
+            postId: pId.id,
         });
-        console.log(comment);
         res.status(201).json({ comment });
     } catch (err) {
         next(err);

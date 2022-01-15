@@ -3,8 +3,6 @@ const { About } = require('../models/index');
 
 exports.getMyAbout = async (req, res, next) => {
     try {
-        console.log(req.user.id);
-
         const about = await About.findAll({ where: { userId: req.user.id } });
         res.status(200).json({ about });
     } catch (err) {
@@ -45,7 +43,6 @@ exports.createAbout = async (req, res, next) => {
             charactor,
             userId: payload.id,
         });
-        console.log(about);
         res.status(201).json({ about });
     } catch (err) {
         next(err);

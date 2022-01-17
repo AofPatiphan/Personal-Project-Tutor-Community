@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
-
 import { AuthContext } from '../contexts/AuthContext';
+import { UserContext } from '../contexts/UserContext';
 
 function Header() {
-    const { logout } = useContext(AuthContext);
+    const { logout, user } = useContext(AuthContext);
+    const { userData } = useContext(UserContext);
     return (
         <div>
             <div style={{ position: 'fixed', width: '100%' }}>
@@ -109,13 +110,15 @@ function Header() {
                                             width: '40px',
                                         }}
                                     >
-                                        <Link to={'/profile'}>
+                                        <Link to={`/profile/${user.username}`}>
                                             <img
-                                                src="https://sv1.picz.in.th/images/2022/01/07/n9jVAy.webp"
+                                                src={`${userData.profileUrl}`}
                                                 alt="Profile logo"
                                                 style={{
                                                     width: 35,
                                                     height: 35,
+                                                    objectFit: 'cover',
+
                                                     borderRadius: '50%',
                                                 }}
                                             />

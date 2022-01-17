@@ -1,17 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { PostContext } from '../contexts/PostContext';
 import { AuthContext } from '../contexts/AuthContext';
+import { UserContext } from '../contexts/UserContext';
 
 function Postblock() {
-    const { title, setTitle, addPost, hideboxPost, setHideboxPost } =
-        useContext(PostContext);
-    const { user } = useContext(AuthContext);
+    const { username } = useParams();
 
-    const handleSubmitPost = (e) => {
+    const {
+        title,
+        setTitle,
+        addPost,
+        addPostProfile,
+        hideboxPost,
+        setHideboxPost,
+        fetchPost,
+        fetchPostProfile,
+    } = useContext(PostContext);
+    const { user } = useContext(AuthContext);
+    const { userData } = useContext(UserContext);
+
+    const handleSubmitPost = async (e) => {
         e.preventDefault();
-        addPost({ title });
+        if (!username) {
+            await addPost({ title });
+            fetchPost();
+            fetchPostProfile(username);
+        } else {
+            await addPostProfile({ title });
+            fetchPost();
+            fetchPostProfile(username);
+        }
         setTitle('');
         setHideboxPost(false);
     };
@@ -51,11 +72,13 @@ function Postblock() {
                         <div style={{ flexGrow: '1' }}>
                             <Link to={'/profile'}>
                                 <img
-                                    src="https://sv1.picz.in.th/images/2022/01/07/n9jVAy.webp"
+                                    src={`${userData.profileUrl}`}
                                     alt="Profile logo"
                                     style={{
                                         width: 35,
                                         height: 35,
+                                        objectFit: 'cover',
+
                                         borderRadius: '50%',
                                     }}
                                 />

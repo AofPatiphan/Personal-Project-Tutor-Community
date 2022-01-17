@@ -3,10 +3,13 @@ import { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import * as localStorageService from '../services/localStorage';
+import { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 const AuthContext = createContext();
 
 function AuthContextProvider(props) {
     const [user, setUser] = useState(null);
+    const { fetchUser, setUserData } = useContext(UserContext);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -15,17 +18,21 @@ function AuthContextProvider(props) {
         }
     }, []);
     const navigate = useNavigate();
-    console.log(user);
-    const login = (token) => {
-        localStorageService.setToken(token);
+
+    const login = async (token) => {
+        await localStorageService.setToken(token);
         setUser(jwtDecode(token));
         navigate('/');
+        setRole('user');
+        fetchUser(token);
     };
 
     const logout = () => {
         localStorageService.removeToken();
         setUser(null);
         navigate('/login');
+        setRole('guest');
+        setUserData(null);
     };
 
     const [username, setUsername] = useState('');
@@ -35,6 +42,9 @@ function AuthContextProvider(props) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [role, setRole] = useState(localStorageService.getRole());
+    const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState('');
 
     const handleSubmitLogin = (e) => {
         e.preventDefault();
@@ -60,6 +70,7 @@ function AuthContextProvider(props) {
                 email,
                 password,
                 confirmPassword,
+                profileUrl: imageUrl,
             })
             .then((res) => {
                 navigate('/login');
@@ -102,6 +113,12 @@ function AuthContextProvider(props) {
                 setConfirmPassword,
                 username,
                 setUsername,
+                role,
+                setRole,
+                loading,
+                setLoading,
+                imageUrl,
+                setImageUrl,
             }}
         >
             {props.children}

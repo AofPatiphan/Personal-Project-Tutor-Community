@@ -1,4 +1,4 @@
-const { User } = require('../models/index');
+const { User } = require('../dbs/models/index');
 
 exports.getAllUser = async (req, res, next) => {
     try {
@@ -11,8 +11,8 @@ exports.getAllUser = async (req, res, next) => {
 
 exports.getUserById = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const user = await User.findOne({ where: { id } });
+        const { username } = req.params;
+        const user = await User.findOne({ where: { username } });
         res.status(200).json({ user });
     } catch (err) {
         next(err);

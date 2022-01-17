@@ -7,17 +7,17 @@ import CommentContextProvider from './contexts/CommentContext';
 
 function App() {
     return (
-        <AuthContextProvider>
-            <PostContextProvider>
-                <CommentContextProvider>
-                    <UserContextProvider>
+        <UserContextProvider>
+            <AuthContextProvider>
+                <PostContextProvider>
+                    <CommentContextProvider>
                         <div style={{ height: '100vh' }}>
                             <Router />
                         </div>
-                    </UserContextProvider>
-                </CommentContextProvider>
-            </PostContextProvider>
-        </AuthContextProvider>
+                    </CommentContextProvider>
+                </PostContextProvider>
+            </AuthContextProvider>
+        </UserContextProvider>
     );
 }
 

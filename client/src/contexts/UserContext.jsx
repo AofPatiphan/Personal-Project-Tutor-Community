@@ -1,9 +1,10 @@
 import axios from '../config/axios';
 import { createContext, useState, useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
 const UserContext = createContext();
 
 function UserContextProvider(props) {
-    const [userData, setUserdata] = useState([]);
+    const [userData, setUserData] = useState([]);
 
     // Get data home
     // useEffect(() => {
@@ -15,28 +16,33 @@ function UserContextProvider(props) {
     // }, []);
 
     // Get data profile
+    const token = localStorage.getItem('token');
+    const fetchUser = async (tokenInput) => {
+        const a = jwtDecode(token || tokenInput);
+        const res = await axios.get(`/user/${a.username}`);
+        setUserData(res.data.user);
+    };
+
     useEffect(() => {
-        const fetchUser = async () => {
-            const res = await axios.get('/user');
-            setUserdata(res.data.users);
-        };
-        fetchUser();
-    }, []);
+        if (token) {
+            fetchUser();
+        }
+    }, [token]);
 
     // const addPost = async ({ title }) => {
     //     const res = await axios.post('/post', {
-    //         postContent: title,
+    //         caption: title,
     //     });
-    //     const nextPost = [res.data.post, ...postHome];
+    //     const nextPost = [res.data.post, ...post];
     //     console.log(res.data);
     //     setPostHome(nextPost);
     // };
 
     // const updatePost = async (id, value) => {
-    //     const idx = postHome.findIndex((item) => item.id === id);
-    //     const newPost = [...postHome];
+    //     const idx = post.findIndex((item) => item.id === id);
+    //     const newPost = [...post];
     //     if (idx !== -1) {
-    //         newPost[idx] = { ...newPost[idx], ...{ postContent: value } };
+    //         newPost[idx] = { ...newPost[idx], ...{ caption: value } };
     //     }
     //     console.log(newPost[idx]);
     //     const res = await axios.put(`/post/${id}`, newPost[idx]);
@@ -50,7 +56,7 @@ function UserContextProvider(props) {
     // // };
 
     return (
-        <UserContext.Provider value={{ userData }}>
+        <UserContext.Provider value={{ userData, fetchUser, setUserData }}>
             {props.children}
         </UserContext.Provider>
     );

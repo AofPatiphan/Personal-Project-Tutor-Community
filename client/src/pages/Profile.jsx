@@ -1,21 +1,40 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import Header from '../components/Header';
 import Postbar from '../components/Postbar';
-import PostItemProfile from '../components/PostItemProfile';
 import { useContext } from 'react';
 import { PostContext } from '../contexts/PostContext';
 import ProfileHeader from '../components/ProfileHeader';
-import PostProfile from '../components/PostProfile';
-import PostitemHome from '../components/PostItemHome';
+import Postitem from '../components/PostItem';
+import axios from '../config/axios';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
 function Profile() {
-    const location = useLocation();
-    console.log(location);
-    const { postProfile } = useContext(PostContext);
+    const { user } = useContext(AuthContext);
+
+    const { postProfile, setPostProfile } = useContext(PostContext);
+    const { username } = useParams();
+    const [person, setPerson] = useState('');
+
+    useEffect(() => {
+        const fetchPost = async () => {
+            const res = await axios.get(`/post/${username}`);
+            setPostProfile(res.data.posts);
+        };
+        fetchPost();
+    }, [username]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const res = await axios.get(`/user/${username}`);
+            setPerson(res.data.user);
+        };
+
+        fetchUser();
+    }, [username]);
+
     return (
         <>
-            <Header />
             <div
                 style={{
                     display: 'flex',
@@ -23,10 +42,12 @@ function Profile() {
                     alignItems: 'center',
                 }}
             >
-                <ProfileHeader />
-                <Postbar />
+                <ProfileHeader person={person} />
+                {user.username === username ? <Postbar person={person} /> : ''}
                 {postProfile.map((el) => {
-                    return <PostitemHome postitemHome={el} key={el.id} />;
+                    return (
+                        <Postitem postitem={el} key={el.id} person={person} />
+                    );
                 })}
             </div>
         </>

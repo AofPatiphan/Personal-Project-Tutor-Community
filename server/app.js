@@ -10,18 +10,27 @@ const postRoute = require('./routes/postRoute');
 const userRoute = require('./routes/userRoute');
 const aboutRoute = require('./routes/aboutRoute');
 const commentRoute = require('./routes/commentRoute');
+const uploadRoute = require('./routes/uploadRoute');
 
 const cors = require('cors');
 const app = express();
+// app.use(express.limit('4M'));
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(
+    express.urlencoded({
+        limit: '50mb',
+        extended: true,
+    })
+);
 
 app.use('/auth', authRoute);
 app.use('/post', postRoute);
 app.use('/user', userRoute);
 app.use('/about', aboutRoute);
 app.use('/comment', commentRoute);
+app.use('/upload', uploadRoute);
 
 // Error handling
 app.use((req, res, next) => {

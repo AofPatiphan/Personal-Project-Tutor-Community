@@ -1,21 +1,27 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { PostContext } from '../contexts/PostContext';
-import { UserContext } from '../contexts/UserContext';
 
 function Editblock({
-    postitemHome: { id, postContent, userId, setHideboxEdit, hideboxEdit },
+    postitem: { id, caption, userId, setHideboxEdit, hideboxEdit, User },
 }) {
-    const { updatePost } = useContext(PostContext);
-    const { userData } = useContext(UserContext);
-    const newUser = userData.find(({ id }) => id === userId);
-    const [editText, setEditText] = useState(postContent);
-
-    const handleSubmitEdit = (e) => {
+    const { updatePost, updatePostProfile, fetchPost, fetchPostProfile } =
+        useContext(PostContext);
+    const [editText, setEditText] = useState(caption);
+    const { username } = useParams();
+    const handleSubmitEdit = async (e) => {
         e.preventDefault();
         if (editText) {
-            updatePost(id, editText);
+            if (!username) {
+                await updatePost(id, editText);
+                fetchPost();
+                fetchPostProfile(username);
+            } else {
+                await updatePostProfile(id, editText);
+                fetchPost();
+                fetchPostProfile(username);
+            }
             setHideboxEdit(false);
         }
     };
@@ -23,7 +29,7 @@ function Editblock({
     const handleClickHideModal = (e) => {
         e.preventDefault();
         setHideboxEdit(false);
-        setEditText(postContent);
+        setEditText(caption);
     };
     return (
         <>
@@ -56,11 +62,13 @@ function Editblock({
                         <div style={{ flexGrow: '1' }}>
                             <Link to={'/profile'}>
                                 <img
-                                    src="https://sv1.picz.in.th/images/2022/01/07/n9jVAy.webp"
+                                    src={`${User.profileUrl}`}
                                     alt="Profile logo"
                                     style={{
                                         width: 35,
                                         height: 35,
+                                        objectFit: 'cover',
+
                                         borderRadius: '50%',
                                     }}
                                 />
@@ -72,7 +80,7 @@ function Editblock({
                                 textAlign: 'start',
                             }}
                         >
-                            <h5>{newUser.firstName}</h5>
+                            <h5>{User.firstName}</h5>
                         </div>
                         <div style={{ flexGrow: '10' }}>&nbsp;</div>
                     </div>

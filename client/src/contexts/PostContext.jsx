@@ -1,65 +1,91 @@
 import axios from '../config/axios';
+import { useParams } from 'react-router-dom';
 import { createContext, useState, useEffect } from 'react';
-import { useContext } from 'react';
-import { AuthContext } from './AuthContext';
 
 const PostContext = createContext();
 
 function PostContextProvider(props) {
-    const [postHome, setPostHome] = useState([]);
+    const [post, setPostHome] = useState([]);
     const [postProfile, setPostProfile] = useState([]);
     const [title, setTitle] = useState('');
     const [visible, serVisible] = useState(false);
     const [hideboxPost, setHideboxPost] = useState(false);
     // Get data home
+    const fetchPost = async () => {
+        const res = await axios.get('/post/all');
+        setPostHome(res.data.posts);
+    };
     useEffect(() => {
-        const fetchPost = async () => {
-            const res = await axios.get('/post/all');
-            setPostHome(res.data.posts);
-        };
         fetchPost();
     }, []);
 
     // Get data profile
+    const fetchPostProfile = async (username) => {
+        const res = await axios.get(`/post/${username}`);
+        setPostProfile(res.data.posts);
+    };
     useEffect(() => {
-        const fetchPost = async () => {
-            const res = await axios.get('/post/');
-            setPostProfile(res.data.posts);
-        };
-        fetchPost();
+        fetchPostProfile();
     }, []);
 
     const addPost = async ({ title }) => {
         const res = await axios.post('/post', {
-            postContent: title,
+            caption: title,
         });
-        const nextPost = [res.data.post, ...postHome];
-        console.log(res.data);
+        const nextPost = [res.data.post, ...post];
         setPostHome(nextPost);
+        fetchPost();
+    };
+
+    const addPostProfile = async ({ title }) => {
+        const res = await axios.post('/post', {
+            caption: title,
+        });
+        const nextPost = [res.data.post, ...postProfile];
+        setPostProfile(nextPost);
+        // fetchPostProfile();
     };
 
     const updatePost = async (id, value) => {
-        const idx = postHome.findIndex((item) => item.id === id);
-        const newPost = [...postHome];
-        if (idx !== -1) {
-            newPost[idx] = { ...newPost[idx], ...{ postContent: value } };
-        }
-        console.log(newPost[idx]);
-        const res = await axios.put(`/post/${id}`, newPost[idx]);
+        const idx = post.findIndex((item) => item.id === id);
+        const newPost = [...post];
+
+        const res = await axios.put(`/post/${id}`, { caption: value });
+
+        newPost[idx] = res.data.post;
+
         setPostHome(newPost);
+    };
+    const updatePostProfile = async (id, value) => {
+        const idx = postProfile.findIndex((item) => item.id === id);
+        const newPost = [...postProfile];
+
+        const res = await axios.put(`/post/${id}`, { caption: value });
+
+        newPost[idx] = res.data.post;
+
+        setPostProfile(newPost);
+        // fetchPostProfile();
     };
 
     const deletePost = async (id) => {
         const res = await axios.delete(`/post/${id}`);
-        const newPost = postHome.filter((item) => item.id !== id);
+        const newPost = post.filter((item) => item.id !== id);
         setPostHome(newPost);
+    };
+
+    const deletePostProfile = async (id) => {
+        const res = await axios.delete(`/post/${id}`);
+        const newPost = postProfile.filter((item) => item.id !== id);
+        setPostProfile(newPost);
     };
 
     return (
         <PostContext.Provider
             value={{
-                postHome,
+                post,
                 postProfile,
+                setPostProfile,
                 addPost,
                 title,
                 setTitle,
@@ -69,6 +95,11 @@ function PostContextProvider(props) {
                 serVisible,
                 hideboxPost,
                 setHideboxPost,
+                fetchPost,
+                addPostProfile,
+                updatePostProfile,
+                deletePostProfile,
+                fetchPostProfile,
             }}
         >
             {props.children}

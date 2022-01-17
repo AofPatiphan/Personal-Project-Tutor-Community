@@ -1,7 +1,7 @@
-import React from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import axios from '../config/axios';
 
 function RegisterBox() {
     const {
@@ -9,7 +9,6 @@ function RegisterBox() {
         setEmail,
         password,
         setPassword,
-        error,
         firstName,
         setFirstName,
         lastName,
@@ -19,7 +18,38 @@ function RegisterBox() {
         handleSubmitRegister,
         username,
         setUsername,
+        setLoading,
+        setImageUrl,
     } = useContext(AuthContext);
+
+    const handleFileInputChange = (e) => {
+        e.preventDefault();
+        setLoading(true);
+        if (!e.target.value) return;
+
+        const reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+
+        reader.onloadend = () => {
+            uploadImage(reader.result);
+        };
+        reader.onerror = () => {
+            console.error('AHHHHHHHH!!');
+        };
+    };
+
+    const uploadImage = async (base64EncodedImage) => {
+        try {
+            const res = await axios.post('/upload', {
+                data: base64EncodedImage,
+            });
+            setImageUrl(res.data.url);
+            setLoading(false);
+        } catch (err) {
+            alert('File size too large.');
+        }
+    };
+
     return (
         <div className="loginform">
             <div className="loginformcontainer p-5">
@@ -73,6 +103,20 @@ function RegisterBox() {
                         <h1>Create Account</h1>
                     </div>
                     <div className="mt-2">
+                        <div className="input-group mb-3">
+                            <input
+                                type="file"
+                                className="form-control"
+                                style={{ borderRadius: '8px' }}
+                                onChange={handleFileInputChange}
+                            />
+                            <label
+                                className="input-group-text"
+                                htmlFor="inputGroupFile02"
+                            >
+                                Upload
+                            </label>
+                        </div>
                         <div className="mb-4 d-flex " style={{ gap: '20px' }}>
                             <input
                                 type="text"

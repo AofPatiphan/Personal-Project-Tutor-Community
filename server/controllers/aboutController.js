@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { About } = require('../models/index');
+const { About } = require('../dbs/models/index');
 
 exports.getMyAbout = async (req, res, next) => {
     try {

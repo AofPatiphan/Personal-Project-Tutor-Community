@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function ProfileHeader() {
+function ProfileHeader({ person }) {
     return (
         <div
             style={{
@@ -25,10 +25,12 @@ function ProfileHeader() {
             >
                 <div style={{ paddingTop: '160px' }}>
                     <img
-                        src="https://sv1.picz.in.th/images/2022/01/07/n9jVAy.webp"
+                        src={`${person.profileUrl}`}
                         alt="Profile picture"
                         style={{
                             width: '130px',
+                            height: '130px',
+                            objectFit: 'cover',
                             borderRadius: '50%',
                         }}
                     />
@@ -36,7 +38,7 @@ function ProfileHeader() {
             </div>
             <div>
                 <h2 style={{ paddingTop: '50px', textAlign: 'center' }}>
-                    Patiphan Manawanich
+                    {`${person.firstName} ${person.lastName} `}
                 </h2>
             </div>
             <div

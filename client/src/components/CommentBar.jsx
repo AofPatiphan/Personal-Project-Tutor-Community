@@ -2,7 +2,7 @@ import React from 'react';
 import { useContext, useState } from 'react';
 import { CommentContext } from '../contexts/CommentContext';
 
-function CommentBar({ handleSubmitComment, setVisible }) {
+function CommentBar({ handleSubmitComment }) {
     const { commentText, setCommentText, addComment } =
         useContext(CommentContext);
     return (

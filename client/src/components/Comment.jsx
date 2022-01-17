@@ -1,24 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useContext, useState } from 'react';
-import { CommentContext } from '../contexts/CommentContext';
-import { UserContext } from '../contexts/UserContext';
 
-function Comment({ commentItem, postitemHome }) {
-    const { userData } = useContext(UserContext);
-    const newUser = userData.find(({ id }) => id === commentItem.userId);
+function Comment({ commentItem, postitem }) {
     return (
         <>
-            {commentItem.postId === postitemHome.id ? (
+            {commentItem.postId === postitem.id ? (
                 <div style={{ padding: '20px 10px', display: 'flex' }}>
                     <div style={{ flexGrow: '1' }}>
                         <Link to={'/profile'}>
                             <img
-                                src="https://sv1.picz.in.th/images/2022/01/07/n9jVAy.webp"
+                                src={`${commentItem.User.profileUrl}`}
                                 alt="Profile logo"
                                 style={{
                                     width: 35,
                                     height: 35,
+                                    objectFit: 'cover',
                                     borderRadius: '50%',
                                 }}
                             />
@@ -26,7 +22,7 @@ function Comment({ commentItem, postitemHome }) {
                     </div>
                     <div style={{ flexGrow: '1' }}>
                         <h6 style={{ fontSize: '15px', marginBottom: '5px' }}>
-                            {newUser.firstName}
+                            {commentItem.User.firstName}
                         </h6>
                         <p
                             style={{

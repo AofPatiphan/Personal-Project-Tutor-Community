@@ -1,4 +1,4 @@
-const { User } = require('../models/index');
+const { User } = require('../dbs/models/index');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -11,6 +11,7 @@ exports.register = async (req, res, next) => {
             email,
             password,
             confirmPassword,
+            profileUrl,
         } = req.body;
 
         if (password !== confirmPassword)
@@ -33,6 +34,7 @@ exports.register = async (req, res, next) => {
             lastName,
             username,
             email,
+            profileUrl,
             password: hashed,
         });
 

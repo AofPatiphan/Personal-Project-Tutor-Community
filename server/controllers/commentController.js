@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { Comment, Post } = require('../models/index');
+const { Comment, Post } = require('../dbs/models/index');
 
 exports.getAllComment = async (req, res, next) => {
     try {

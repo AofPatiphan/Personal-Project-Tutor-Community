@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 
 function LoginBox() {
-    const { email, setEmail, password, setPassword, error, handleSubmitLogin } =
+    const { email, setEmail, password, setPassword, handleSubmitLogin } =
         useContext(AuthContext);
     return (
         <div className="loginform">

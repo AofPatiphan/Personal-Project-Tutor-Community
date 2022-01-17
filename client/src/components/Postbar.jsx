@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { PostContext } from '../contexts/PostContext';
 import { AuthContext } from '../contexts/AuthContext';
 
-export default function Postbar() {
+export default function Postbar({ person }) {
     const { setHideboxPost } = useContext(PostContext);
     const { user } = useContext(AuthContext);
 
@@ -35,7 +35,7 @@ export default function Postbar() {
             <div>
                 <i className="bi bi-arrow-up"></i>
             </div>
-            <Postblock />
+            <Postblock person={person} />
         </div>
     );
 }

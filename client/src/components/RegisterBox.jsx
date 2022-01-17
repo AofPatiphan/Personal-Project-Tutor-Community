@@ -40,7 +40,7 @@ function RegisterBox() {
 
     const uploadImage = async (base64EncodedImage) => {
         try {
-            const res = await axios.post('/upload', {
+            const res = await axios.post('/upload/post', {
                 data: base64EncodedImage,
             });
             setImageUrl(res.data.url);

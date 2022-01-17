@@ -1,5 +1,5 @@
 import React from 'react';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { CommentContext } from '../contexts/CommentContext';
 
 function CommentBar({ handleSubmitComment }) {
@@ -12,6 +12,7 @@ function CommentBar({ handleSubmitComment }) {
                     <input
                         className="form-control me-2"
                         type="text"
+                        value={commentText}
                         placeholder="Comment"
                         style={{ borderRadius: '30px' }}
                         onChange={(e) => setCommentText(e.target.value)}

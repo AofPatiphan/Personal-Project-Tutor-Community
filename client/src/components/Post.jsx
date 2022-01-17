@@ -18,6 +18,7 @@ function Post({
         User,
         Likes,
         Comments,
+        pictureUrl,
     },
     setVisible,
     visible,
@@ -149,6 +150,23 @@ function Post({
                     </div>
                 </div>
                 <div>{caption}</div>
+                {pictureUrl ? (
+                    <div>
+                        <img
+                            src={`${pictureUrl}`}
+                            alt="Post Picture"
+                            style={{
+                                width: '100%',
+                                height: 'auto',
+                                objectFit: 'fit',
+
+                                borderRadius: '8px',
+                            }}
+                        />
+                    </div>
+                ) : (
+                    ''
+                )}
                 <div
                     style={{
                         display: 'flex',

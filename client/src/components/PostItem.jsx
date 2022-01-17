@@ -1,6 +1,6 @@
 import Comment from './Comment';
 import Post from './Post';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useContext, useState } from 'react';
 import { CommentContext } from '../contexts/CommentContext';
@@ -19,7 +19,7 @@ export default function Postitem({ postitem }) {
         e.preventDefault();
         await addComment(commentText, postitem.id);
         setCommentText('');
-        setVisible(false);
+        // setVisible(false);
         fetchPostProfile(username);
     };
     return (
@@ -40,21 +40,8 @@ export default function Postitem({ postitem }) {
                 postitem={postitem}
             />
             {visible ? (
-                <CommentBar handleSubmitComment={handleSubmitComment} />
-            ) : (
-                ''
-            )}
-            <div style={{ textAlign: 'end', padding: '10px 25px 0 0' }}>
-                <button
-                    className="btn "
-                    style={{ fontSize: '12px' }}
-                    onClick={() => setToggleComment(!toggleComment)}
-                >
-                    {`${toggleComment ? 'Hide' : 'Show'} comment`}
-                </button>
-            </div>
-            {toggleComment ? (
                 <>
+                    <CommentBar handleSubmitComment={handleSubmitComment} />
                     {postitem.Comments.map((el) => {
                         return (
                             <Comment
@@ -68,6 +55,21 @@ export default function Postitem({ postitem }) {
             ) : (
                 ''
             )}
+            {/* <div style={{ textAlign: 'end', padding: '10px 25px 0 0' }}>
+                <button
+                    className="btn "
+                    style={{ fontSize: '12px' }}
+                    onClick={() => setToggleComment(!toggleComment)}
+                >
+                    {`${toggleComment ? 'Hide' : 'Show'} comment`}
+                </button>
+            </div> */}
+            {/* {toggleComment ? (
+                <> */}
+            {/* </>
+            ) : (
+                ''
+            )} */}
         </div>
     );
 }

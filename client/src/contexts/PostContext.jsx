@@ -18,7 +18,6 @@ function PostContextProvider(props) {
     useEffect(() => {
         fetchPost();
     }, []);
-
     // Get data profile
     const fetchPostProfile = async (username) => {
         const res = await axios.get(`/post/${username}`);
@@ -28,18 +27,20 @@ function PostContextProvider(props) {
         fetchPostProfile();
     }, []);
 
-    const addPost = async ({ title }) => {
+    const addPost = async ({ title, picture }) => {
         const res = await axios.post('/post', {
             caption: title,
+            pictureUrl: picture,
         });
         const nextPost = [res.data.post, ...post];
         setPostHome(nextPost);
         fetchPost();
     };
 
-    const addPostProfile = async ({ title }) => {
+    const addPostProfile = async ({ title, picture }) => {
         const res = await axios.post('/post', {
             caption: title,
+            pictureUrl: picture,
         });
         const nextPost = [res.data.post, ...postProfile];
         setPostProfile(nextPost);
@@ -56,6 +57,7 @@ function PostContextProvider(props) {
 
         setPostHome(newPost);
     };
+
     const updatePostProfile = async (id, value) => {
         const idx = postProfile.findIndex((item) => item.id === id);
         const newPost = [...postProfile];
@@ -89,6 +91,7 @@ function PostContextProvider(props) {
                 addPost,
                 title,
                 setTitle,
+
                 updatePost,
                 deletePost,
                 visible,

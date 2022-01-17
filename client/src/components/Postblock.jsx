@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import { PostContext } from '../contexts/PostContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { UserContext } from '../contexts/UserContext';
+import axios from '../config/axios';
+import { useState } from 'react';
 
 function Postblock() {
     const { username } = useParams();
@@ -19,20 +21,54 @@ function Postblock() {
         fetchPost,
         fetchPostProfile,
     } = useContext(PostContext);
-    const { user } = useContext(AuthContext);
+    const { user, setLoading, loading } = useContext(AuthContext);
     const { userData } = useContext(UserContext);
+
+    const [picture, setPicture] = useState('');
+
+    const handleFileInputChange = async (e) => {
+        // e.preventDefault();
+        setLoading(true);
+        if (!e.target.value) return;
+
+        const reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+
+        reader.onloadend = async () => {
+            await uploadImage(reader.result);
+        };
+        e.target.value = '';
+        reader.onerror = () => {
+            console.error('AHHHHHHHH!!');
+        };
+    };
+
+    const uploadImage = async (base64EncodedImage) => {
+        try {
+            const res = await axios.post('/upload', {
+                data: base64EncodedImage,
+            });
+            setPicture(res.data.url);
+
+            setLoading(false);
+        } catch (err) {
+            alert('File size too large.');
+        }
+    };
 
     const handleSubmitPost = async (e) => {
         e.preventDefault();
+
         if (!username) {
-            await addPost({ title });
+            await addPost({ title, picture });
             fetchPost();
             fetchPostProfile(username);
         } else {
-            await addPostProfile({ title });
+            await addPostProfile({ title, picture });
             fetchPost();
             fetchPostProfile(username);
         }
+        setPicture('');
         setTitle('');
         setHideboxPost(false);
     };
@@ -41,6 +77,7 @@ function Postblock() {
         e.preventDefault();
         setHideboxPost(false);
     };
+
     return (
         <>
             <div
@@ -98,25 +135,73 @@ function Postblock() {
                         <div style={{ paddingLeft: '55px' }}>
                             <textarea
                                 className="form-control"
-                                rows="4"
+                                rows="3"
                                 placeholder={`What’s on you mind, ${user.firstName}?`}
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 style={{ width: '400px', border: '0' }}
                             ></textarea>
                         </div>
-                        <button
-                            type="submit"
-                            className="btn btn-primary mb-3"
-                            style={{ width: '405px', marginLeft: '25px' }}
+                        {picture ? (
+                            <div
+                                style={{
+                                    paddingLeft: '25px',
+                                    height: 'auto',
+                                }}
+                            >
+                                <img
+                                    src={`${picture}`}
+                                    alt="Post img"
+                                    style={{
+                                        width: '250px',
+                                        height: 'auto',
+                                        borderRadius: '8px',
+                                        objectFit: 'fit',
+                                        margin: '20px',
+                                    }}
+                                />
+                            </div>
+                        ) : (
+                            <></>
+                        )}
+                        <div
+                            className="input-group mb-3"
+                            style={{ textAlign: 'center', padding: ' 0 30px' }}
                         >
-                            Post
-                        </button>
+                            <input
+                                type="file"
+                                className="form-control "
+                                style={{
+                                    borderRadius: '8px',
+                                    marginLeft: '20px',
+                                }}
+                                onChange={handleFileInputChange}
+                            />
+                        </div>
+                        {!loading ? (
+                            <button
+                                type="submit"
+                                className="btn btn-primary mb-3 "
+                                style={{ width: '405px', marginLeft: '25px' }}
+                            >
+                                Post
+                            </button>
+                        ) : (
+                            <button
+                                type="submit"
+                                className="btn btn-primary mb-3 "
+                                style={{ width: '405px', marginLeft: '25px' }}
+                                disabled
+                            >
+                                Post
+                            </button>
+                        )}
                     </form>
                 </div>
             </div>
         </>
     );
 }
+// }
 
 export default Postblock;

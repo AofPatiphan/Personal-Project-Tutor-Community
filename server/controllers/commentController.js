@@ -94,7 +94,7 @@ exports.deleteComment = async (req, res, next) => {
             },
         });
         if (result === 0) {
-            res.status(400).json({ message: 'cannot delete todo' });
+            res.status(400).json({ message: 'cannot delete comment' });
         }
         res.status(204).json();
     } catch (err) {

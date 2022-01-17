@@ -1,7 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useContext } from 'react';
+import { CommentContext } from '../contexts/CommentContext';
+import { PostContext } from '../contexts/PostContext';
 
 function Comment({ commentItem, postitem }) {
+    const { username } = useParams();
+
+    const { deleteCommentHome, deleteCommentProfile } =
+        useContext(CommentContext);
+    const { deletePost, fetchPost, post, deletePostProfile, fetchPostProfile } =
+        useContext(PostContext);
+
+    console.log(commentItem);
+
+    const handleClickDeleteComment = async (e) => {
+        e.preventDefault();
+
+        if (!username) {
+            await deleteCommentHome(commentItem.id);
+            fetchPost();
+            fetchPostProfile(username);
+        } else {
+            await deleteCommentProfile(commentItem.id);
+            fetchPost();
+            fetchPostProfile(username);
+        }
+    };
+
     return (
         <>
             {commentItem.postId === postitem.id ? (
@@ -36,9 +62,16 @@ function Comment({ commentItem, postitem }) {
                     </div>
                     <div style={{ flexGrow: '8', textAlign: 'end' }}>
                         <button className="btn" type="submit">
+                            <i className="bi bi-three-dots"></i>
+                        </button>
+                        <button
+                            className="btn"
+                            type="submit"
+                            onClick={handleClickDeleteComment}
+                        >
                             <i
-                                className="bi bi-three-dots"
-                                style={{ paddingRight: '25px' }}
+                                className="bi bi-trash"
+                                style={{ marginRight: '20px' }}
                             ></i>
                         </button>
                     </div>

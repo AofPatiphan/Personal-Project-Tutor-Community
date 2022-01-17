@@ -1,17 +1,19 @@
 import axios from '../config/axios';
 import { createContext, useState, useEffect } from 'react';
 import { useContext } from 'react';
-import { AuthContext } from './AuthContext';
 import { PostContext } from './PostContext';
 
 const CommentContext = createContext();
 
 function CommentContextProvider(props) {
-    const { fetchPost } = useContext(PostContext);
+    const { fetchPost, post } = useContext(PostContext);
+    console.log(post);
 
-    // const [comment, setComment] = useState([]);
+    const commentHome = post;
+
+    const commentProfile = post;
+
     const [commentText, setCommentText] = useState('');
-
     // Get data home
     // useEffect(() => {
     //     const fetchComment = async () => {
@@ -21,7 +23,7 @@ function CommentContextProvider(props) {
     //     fetchComment();
     // }, []);
 
-    // // Get data profile
+    // Get data profile
     // useEffect(() => {
     //     const fetchPost = async () => {
     //         const res = await axios.get('/post/');
@@ -42,7 +44,7 @@ function CommentContextProvider(props) {
 
     // const updateComment = async (id, value) => {
     //     const idx = post.findIndex((item) => item.id === id);
-    //     const newPost = [...post];
+    //     const newComment = [...post];
     //     if (idx !== -1) {
     //         newPost[idx] = { ...newPost[idx], ...{ caption: value } };
     //     }
@@ -51,11 +53,16 @@ function CommentContextProvider(props) {
     //     setPostHome(newPost);
     // };
 
-    // const deleteComment = async (id) => {
-    //     const res = await axios.delete(`/comment/${id}`);
-    //     const newComment = commentHome.filter((item) => item.id !== id);
-    //     setPostHome(newComment);
-    // };
+    const deleteCommentHome = async (id) => {
+        const res = await axios.delete(`/comment/${id}`);
+        const newComment = commentHome.filter((item) => item.id !== id);
+        // setCommentHome(newComment);
+    };
+    const deleteCommentProfile = async (id) => {
+        const res = await axios.delete(`/comment/${id}`);
+        const newComment = commentHome.filter((item) => item.id !== id);
+        // setCommentHome(newComment);
+    };
 
     return (
         <CommentContext.Provider
@@ -64,6 +71,8 @@ function CommentContextProvider(props) {
                 commentText,
                 setCommentText,
                 addComment,
+                deleteCommentHome,
+                deleteCommentProfile,
                 // post,
                 // postProfile,
                 // addPost,

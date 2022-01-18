@@ -40,7 +40,7 @@ function Comment({ commentItem, postitem }) {
             {commentItem.postId === postitem.id ? (
                 <div style={{ padding: '20px 10px', display: 'flex' }}>
                     <div style={{ flexGrow: '1' }}>
-                        <Link to={'/profile'}>
+                        <Link to={`/profile/${commentItem.User.username}`}>
                             <img
                                 src={`${commentItem.User.profileUrl}`}
                                 alt="Profile logo"

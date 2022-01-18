@@ -1,11 +1,22 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { UserContext } from '../contexts/UserContext';
+import { useState } from 'react';
 
 function Header() {
     const { logout, user } = useContext(AuthContext);
-    const { userData } = useContext(UserContext);
+    const { userData, getUserById } = useContext(UserContext);
+    const [search, setSearch] = useState('');
+
+    const navigate = useNavigate();
+
+    const handleSubmitSearch = (e) => {
+        e.preventDefault();
+        getUserById(search);
+        navigate('/findfriend');
+        setSearch('');
+    };
     return (
         <div>
             <div style={{ position: 'fixed', width: '100%' }}>
@@ -82,13 +93,19 @@ function Header() {
                             <div>
                                 <div className="d-flex">
                                     <div>
-                                        <form className="d-flex">
+                                        <form
+                                            className="d-flex"
+                                            onSubmit={handleSubmitSearch}
+                                        >
                                             <input
                                                 className="form-control me-2"
                                                 type="search"
                                                 placeholder="Search"
-                                                aria-label="Search"
+                                                value={search}
                                                 style={{ borderRadius: '30px' }}
+                                                onChange={(e) =>
+                                                    setSearch(e.target.value)
+                                                }
                                             />
                                             <button
                                                 className="btn"
@@ -118,7 +135,6 @@ function Header() {
                                                     width: 35,
                                                     height: 35,
                                                     objectFit: 'cover',
-
                                                     borderRadius: '50%',
                                                 }}
                                             />

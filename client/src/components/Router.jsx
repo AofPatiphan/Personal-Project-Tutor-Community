@@ -9,6 +9,7 @@ import Login from '../pages/LogIn';
 import Profile from '../pages/Profile';
 import About from '../pages/About';
 import Header from '../components/Header';
+import Findfriend from '../pages/Findfriend';
 
 const routes = {
     guest: [
@@ -20,6 +21,7 @@ const routes = {
         { path: '/profile/:username', element: <Profile /> },
         { path: '/', element: <Home /> },
         { path: '/about', element: <About /> },
+        { path: '/findfriend', element: <Findfriend /> },
         { path: '*', element: <Navigate to="/" replace={true} /> },
     ],
 };

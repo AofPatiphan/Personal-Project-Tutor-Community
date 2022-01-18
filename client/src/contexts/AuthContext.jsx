@@ -10,6 +10,7 @@ const AuthContext = createContext();
 function AuthContextProvider(props) {
     const [user, setUser] = useState(null);
     const { fetchUser, setUserData } = useContext(UserContext);
+    const [isLogin, setIsLogin] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -26,6 +27,7 @@ function AuthContextProvider(props) {
         navigate('/');
         setRole('user');
         fetchUser(token);
+        setIsLogin(true);
     };
 
     const logout = () => {
@@ -34,6 +36,7 @@ function AuthContextProvider(props) {
         navigate('/login');
         setRole('guest');
         setUserData(null);
+        setIsLogin(false);
     };
 
     const [username, setUsername] = useState('');
@@ -118,6 +121,7 @@ function AuthContextProvider(props) {
                 setLoading,
                 imageUrl,
                 setImageUrl,
+                isLogin,
             }}
         >
             {props.children}

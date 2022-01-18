@@ -1,14 +1,19 @@
 import axios from '../config/axios';
 import { createContext, useState, useEffect } from 'react';
+import { useContext } from 'react';
+import { AuthContext } from './AuthContext';
 
 const PostContext = createContext();
 
 function PostContextProvider(props) {
+    const { isLogin } = useContext(AuthContext);
+
     const [post, setPostHome] = useState([]);
     const [postProfile, setPostProfile] = useState([]);
     const [title, setTitle] = useState('');
     const [visible, serVisible] = useState(false);
     const [hideboxPost, setHideboxPost] = useState(false);
+
     // Get data home
     const fetchPost = async () => {
         const res = await axios.get('/post/');
@@ -17,7 +22,7 @@ function PostContextProvider(props) {
 
     useEffect(() => {
         fetchPost();
-    }, []);
+    }, [isLogin]);
     // Get data profile
     const fetchPostProfile = async (username) => {
         const res = await axios.get(`/post/${username}`);

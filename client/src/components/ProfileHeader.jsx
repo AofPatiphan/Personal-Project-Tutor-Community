@@ -12,11 +12,15 @@ function ProfileHeader({ person }) {
     const { username } = useParams();
     const { user } = useContext(AuthContext);
     const { fetchPost, fetchPostProfile } = useContext(PostContext);
-    const { request } = useContext(UserContext);
+    const { request, getAllFriendRequest } = useContext(UserContext);
+    const [isRequest, setIsRequest] = useState(false);
+
+    useEffect(() => {
+        fetchPost();
+    }, [isRequest]);
 
     const [friendById, setFriendById] = useState({});
     const [buttonStatus, setButtonStatus] = useState('');
-
     const getFriendRequestById = async (id) => {
         const res = await axios.get(`/friend/${id}/${person.id}`);
         setFriendById(res.data.friend || {});
@@ -32,6 +36,7 @@ function ProfileHeader({ person }) {
         setFriendById(res.data.friend || {});
         fetchPost();
         fetchPostProfile();
+        getAllFriendRequest();
     };
 
     const unFriend = async (id) => {
@@ -73,6 +78,8 @@ function ProfileHeader({ person }) {
             await unFriend(user.id);
         }
         await getFriendRequestById(user.id);
+        setIsRequest(!isRequest);
+        await fetchPost();
     };
 
     const handleClickReject = async (e) => {

@@ -7,6 +7,7 @@ function UserContextProvider(props) {
     const [userData, setUserData] = useState([]);
     const [friend, setFriend] = useState([]);
     const [allFriend, setAllFriend] = useState([]);
+    const [profileCard, setProfileCard] = useState([]);
     // Get data profile
     const token = localStorage.getItem('token');
     const fetchUser = async (tokenInput) => {
@@ -46,6 +47,15 @@ function UserContextProvider(props) {
         getAllFriend();
     }, []);
 
+    const getUserById = async (name) => {
+        const res = await axios.get(`/user/name/${name}`);
+        setProfileCard(res.data.user || {});
+    };
+    useEffect(() => {
+        getUserById();
+    }, []);
+    console.log(profileCard);
+
     // const updatePost = async (id, value) => {
     //     const idx = post.findIndex((item) => item.id === id);
     //     const newPost = [...post];
@@ -72,6 +82,9 @@ function UserContextProvider(props) {
                 request,
                 friend,
                 allFriend,
+                profileCard,
+                getAllFriendRequest,
+                getUserById,
             }}
         >
             {props.children}

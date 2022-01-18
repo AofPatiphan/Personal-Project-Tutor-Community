@@ -78,7 +78,9 @@ exports.getFriendPost = async (req, res, next) => {
             return acc;
         }, []);
         const usersPost = await Post.findAll({
-            where: { userId: friendsIds },
+            where: {
+                [Op.or]: [{ userId: friendsIds }, { userId: req.user.id }],
+            },
             include: [
                 {
                     model: User,

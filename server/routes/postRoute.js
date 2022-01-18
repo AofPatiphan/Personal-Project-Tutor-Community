@@ -7,8 +7,8 @@ const postController = require('../controllers/postController');
 const auth = passport.authenticate('jwt-auth', { session: false });
 
 router.get('/all', postController.getAllPost);
-// router.get('/', auth, postController.getFriendPost);
-router.get('/', auth, postController.getPost);
+router.get('/', auth, postController.getFriendPost);
+// router.get('/', auth, postController.getPost);
 router.get('/:username', postController.getPostById);
 router.post('/', auth, postController.createPost);
 router.put('/:id', auth, postController.updatePost);

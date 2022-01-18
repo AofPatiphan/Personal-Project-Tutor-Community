@@ -53,19 +53,6 @@ exports.getAllPost = async (req, res, next) => {
 exports.getFriendPost = async (req, res, next) => {
     try {
         const friends = await Friend.findAll({
-            include: [
-                {
-                    model: User,
-                    // include: [
-                    //     {
-                    //         model: Post,
-                    //     },
-                    // ],
-                    attributes: {
-                        exclude: ['password', 'createdAt', 'updatedAt'],
-                    },
-                },
-            ],
             where: {
                 status: 'FRIEND',
                 [Op.or]: [
@@ -73,6 +60,14 @@ exports.getFriendPost = async (req, res, next) => {
                     { request_by_id: req.user.id },
                 ],
             },
+            // include: [
+            //     {
+            //         model: User,
+            //         attributes: {
+            //             exclude: ['password', 'createdAt', 'updatedAt'],
+            //         },
+            //     },
+            // ],
         });
         const friendsIds = friends.reduce((acc, item) => {
             if (req.user.id === item.request_by_id) {
@@ -83,10 +78,43 @@ exports.getFriendPost = async (req, res, next) => {
             return acc;
         }, []);
         const usersPost = await Post.findAll({
-            where: { id: friendsIds },
-            // attributes: {
-            //     excludes: ['password'],
-            // },
+            where: { userId: friendsIds },
+            include: [
+                {
+                    model: User,
+                    attributes: {
+                        exclude: ['password', 'createdAt', 'updatedAt'],
+                    },
+                },
+                {
+                    model: Comment,
+
+                    include: [
+                        {
+                            model: User,
+                            attributes: {
+                                exclude: ['password', 'createdAt', 'updatedAt'],
+                            },
+                        },
+                    ],
+                    order: [[Comment, 'createdAt', 'ASC']],
+                },
+                {
+                    model: Like,
+                    include: [
+                        {
+                            model: User,
+                            attributes: {
+                                exclude: ['password', 'createdAt', 'updatedAt'],
+                            },
+                        },
+                    ],
+                },
+            ],
+            order: [
+                ['createdAt', 'DESC'],
+                [Comment, 'createdAt', 'ASC'],
+            ],
         });
         res.status(200).json({ usersPost });
     } catch (err) {

@@ -11,8 +11,8 @@ function PostContextProvider(props) {
     const [hideboxPost, setHideboxPost] = useState(false);
     // Get data home
     const fetchPost = async () => {
-        const res = await axios.get('/post/all');
-        setPostHome(res.data.posts);
+        const res = await axios.get('/post/');
+        setPostHome(res.data.usersPost);
     };
 
     useEffect(() => {

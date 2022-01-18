@@ -1,5 +1,4 @@
 import axios from '../config/axios';
-import { useParams } from 'react-router-dom';
 import { createContext, useState, useEffect } from 'react';
 
 const PostContext = createContext();
@@ -15,6 +14,7 @@ function PostContextProvider(props) {
         const res = await axios.get('/post/all');
         setPostHome(res.data.posts);
     };
+
     useEffect(() => {
         fetchPost();
     }, []);
@@ -44,7 +44,6 @@ function PostContextProvider(props) {
         });
         const nextPost = [res.data.post, ...postProfile];
         setPostProfile(nextPost);
-        // fetchPostProfile();
     };
 
     const updatePost = async (id, value) => {
@@ -67,7 +66,6 @@ function PostContextProvider(props) {
         newPost[idx] = res.data.post;
 
         setPostProfile(newPost);
-        // fetchPostProfile();
     };
 
     const deletePost = async (id) => {
@@ -91,7 +89,6 @@ function PostContextProvider(props) {
                 addPost,
                 title,
                 setTitle,
-
                 updatePost,
                 deletePost,
                 visible,

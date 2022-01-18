@@ -1,7 +1,102 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { UserContext } from '../contexts/UserContext';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function ProfileHeader({ person }) {
+    const { username } = useParams();
+    const { user } = useContext(AuthContext);
+    const { request } = useContext(UserContext);
+
+    const [friendById, setFriendById] = useState({});
+    const [buttonStatus, setButtonStatus] = useState('');
+
+    const getFriendRequestById = async (id) => {
+        const res = await axios.get(`/friend/${id}/${person.id}`);
+        setFriendById(res.data.friend || {});
+    };
+
+    const cancelRequest = async (id) => {
+        const res = await axios.delete(`/friend/${id}/${person.id}`);
+        setFriendById(res.data.friend || {});
+    };
+
+    const acceptRequest = async (id) => {
+        const res = await axios.put(`/friend/${id}/${person.id}`);
+        setFriendById(res.data.friend || {});
+    };
+
+    const unFriend = async (id) => {
+        const res = await axios.delete(`/friend/${id}/${person.id}`);
+        setFriendById(res.data.friend || {});
+    };
+
+    useEffect(() => {
+        getFriendRequestById(user.id);
+    }, [username]);
+
+    useEffect(() => {
+        checkfriend();
+    }, [friendById]);
+
+    const handleClickRequest = async (e) => {
+        e.preventDefault();
+
+        if (!friendById.status) {
+            await request({ receiver: person.id, requester: user.id });
+        }
+        // if (!friendById.status) {
+        //     await request({ receiver: person.id, requester: user.id });
+        // }
+        if (
+            friendById.status === 'PENDONG' &&
+            user.id === friendById.request_by_id
+        ) {
+            await cancelRequest(user.id);
+        }
+        if (
+            friendById.status === 'PENDONG' &&
+            user.id === friendById.request_to_id
+        ) {
+            await acceptRequest(user.id);
+        }
+        if (friendById.status === 'FRIEND') {
+            await unFriend(user.id);
+        }
+        await getFriendRequestById(user.id);
+    };
+
+    const handleClickReject = async (e) => {
+        e.preventDefault();
+        if (friendById.status) {
+            await unFriend(user.id);
+        }
+    };
+
+    const checkfriend = () => {
+        if (!friendById.status) {
+            return setButtonStatus('Request');
+        }
+        if (friendById.status === 'FRIEND') {
+            return setButtonStatus('Friend');
+        }
+        if (
+            friendById.status === 'PENDONG' &&
+            user.id === friendById.request_by_id
+        ) {
+            return setButtonStatus('Cancel request');
+        }
+        if (
+            friendById.status === 'PENDONG' &&
+            user.id === friendById.request_to_id
+        ) {
+            return setButtonStatus('Accept request');
+        }
+    };
+
     return (
         <div
             style={{
@@ -98,16 +193,56 @@ function ProfileHeader({ person }) {
                     </ul>
                 </div>
                 <div>
-                    <button
-                        style={{
-                            borderRadius: '8px',
-                            background: '#E5E6EB',
-                            border: '0',
-                            padding: '3px 15px',
-                        }}
-                    >
-                        Edit Profile
-                    </button>
+                    {user.username !== username ? (
+                        <>
+                            <button
+                                style={{
+                                    borderRadius: '8px',
+                                    background: '#E5E6EB',
+                                    border: '0',
+                                    padding: '3px 15px',
+                                    marginRight: '30px',
+                                }}
+                                onClick={handleClickRequest}
+                            >
+                                {buttonStatus}
+                            </button>
+                            {friendById.status === 'PENDONG' &&
+                            friendById.request_by_id === person.id &&
+                            user.id === friendById.request_to_id ? (
+                                <button
+                                    style={{
+                                        borderRadius: '8px',
+                                        background: '#E5E6EB',
+                                        border: '0',
+                                        padding: '3px 15px',
+                                        marginRight: '30px',
+                                    }}
+                                    onClick={handleClickReject}
+                                >
+                                    {'Reject'}
+                                </button>
+                            ) : (
+                                <></>
+                            )}
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                    {user.username === username ? (
+                        <button
+                            style={{
+                                borderRadius: '8px',
+                                background: '#E5E6EB',
+                                border: '0',
+                                padding: '3px 15px',
+                            }}
+                        >
+                            Edit Profile
+                        </button>
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </div>
         </div>

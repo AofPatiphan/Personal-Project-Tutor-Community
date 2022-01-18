@@ -1,31 +1,38 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { CommentContext } from '../contexts/CommentContext';
 import { PostContext } from '../contexts/PostContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 function Comment({ commentItem, postitem }) {
     const { username } = useParams();
 
-    const { deleteCommentHome, deleteCommentProfile } =
-        useContext(CommentContext);
-    const { deletePost, fetchPost, post, deletePostProfile, fetchPostProfile } =
-        useContext(PostContext);
+    const { deleteComment, updateComment } = useContext(CommentContext);
+    const { fetchPost, fetchPostProfile } = useContext(PostContext);
+    const { user } = useContext(AuthContext);
 
-    console.log(commentItem);
+    const [editText, setEditText] = useState(commentItem.commentContent);
+    const [visible, setVisible] = useState(false);
 
     const handleClickDeleteComment = async (e) => {
-        e.preventDefault();
-
-        if (!username) {
-            await deleteCommentHome(commentItem.id);
-            fetchPost();
-            fetchPostProfile(username);
+        if (user.id === postitem.userId) {
+            await deleteComment(commentItem.id);
+        } else if (user.id === commentItem.userId) {
+            await deleteComment(commentItem.id);
         } else {
-            await deleteCommentProfile(commentItem.id);
-            fetchPost();
-            fetchPostProfile(username);
+            return;
         }
+        fetchPost();
+        fetchPostProfile(username);
+    };
+
+    const handleClickUpdateComment = async (e) => {
+        e.preventDefault();
+        await updateComment(commentItem.id, editText);
+        fetchPost();
+        fetchPostProfile(username);
+        setVisible(!visible);
     };
 
     return (
@@ -50,18 +57,59 @@ function Comment({ commentItem, postitem }) {
                         <h6 style={{ fontSize: '15px', marginBottom: '5px' }}>
                             {commentItem.User.firstName}
                         </h6>
-                        <p
-                            style={{
-                                fontSize: '13px',
-                                marginBottom: '5px',
-                                width: '500px',
-                            }}
+                        <form
+                            className="d-flex"
+                            onSubmit={handleClickUpdateComment}
                         >
-                            {commentItem.commentContent}
-                        </p>
+                            {!visible ? (
+                                <p
+                                    style={{
+                                        fontSize: '13px',
+                                        marginBottom: '5px',
+                                        width: '500px',
+                                    }}
+                                >
+                                    {commentItem.commentContent}
+                                </p>
+                            ) : (
+                                <>
+                                    <input
+                                        className="form-control "
+                                        type="text"
+                                        value={editText}
+                                        style={{
+                                            borderRadius: '30px',
+                                            height: '40px',
+                                        }}
+                                        onChange={(e) =>
+                                            setEditText(e.target.value)
+                                        }
+                                    />
+                                    <button className="btn" type="submit">
+                                        <i
+                                            className="bi bi-pencil-square"
+                                            style={{ fontSize: '1.2em' }}
+                                        ></i>
+                                    </button>
+                                    <button
+                                        className="btn"
+                                        onClick={() => setVisible(!visible)}
+                                    >
+                                        <i
+                                            className="bi bi-x-square"
+                                            style={{ fontSize: '1.2em' }}
+                                        ></i>
+                                    </button>
+                                </>
+                            )}
+                        </form>
                     </div>
                     <div style={{ flexGrow: '8', textAlign: 'end' }}>
-                        <button className="btn" type="submit">
+                        <button
+                            className="btn"
+                            type="submit"
+                            onClick={() => setVisible(!visible)}
+                        >
                             <i className="bi bi-three-dots"></i>
                         </button>
                         <button

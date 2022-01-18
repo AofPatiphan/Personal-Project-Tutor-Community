@@ -1,5 +1,5 @@
 // // // Create Table
-// const { sequelize } = require('./models/index');
+// const { sequelize } = require('./dbs/models/index');
 // sequelize.sync({ force: true });
 
 require('dotenv').config();
@@ -11,6 +11,7 @@ const userRoute = require('./routes/userRoute');
 const aboutRoute = require('./routes/aboutRoute');
 const commentRoute = require('./routes/commentRoute');
 const uploadRoute = require('./routes/uploadRoute');
+const friendRoute = require('./routes/friendRoute');
 
 const cors = require('cors');
 const app = express();
@@ -31,6 +32,7 @@ app.use('/user', userRoute);
 app.use('/about', aboutRoute);
 app.use('/comment', commentRoute);
 app.use('/upload', uploadRoute);
+app.use('/friend', friendRoute);
 
 // Error handling
 app.use((req, res, next) => {

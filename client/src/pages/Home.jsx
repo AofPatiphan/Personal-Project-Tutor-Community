@@ -19,6 +19,7 @@ function Home() {
                     &nbsp;
                 </div>
                 <Postbar />
+
                 {post.map((el) => {
                     return <PostItem postitem={el} key={el.id} />;
                 })}

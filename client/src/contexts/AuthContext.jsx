@@ -17,6 +17,7 @@ function AuthContextProvider(props) {
             setUser(jwtDecode(token));
         }
     }, []);
+
     const navigate = useNavigate();
 
     const login = async (token) => {
@@ -75,20 +76,18 @@ function AuthContextProvider(props) {
             .then((res) => {
                 navigate('/login');
             })
+            .then((res) => {
+                setFirstName('');
+                setLastName('');
+                setUsername('');
+                setEmail('');
+                setPassword('');
+            })
+
             .catch((err) => {
                 console.log(err);
                 setError('Pleast completed form');
-                // setTimeout(() => setError(''), 5000);
             });
-
-        // .then((res) => {
-        //     navigate('/login');
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        //     setError('Pleast completed form');
-        //     // setTimeout(() => setError(''), 5000);
-        // });
     };
     return (
         <AuthContext.Provider

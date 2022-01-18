@@ -4,10 +4,6 @@ module.exports = (sequelize, Datatypes) => {
         {
             caption: {
                 type: Datatypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
             },
             pictureUrl: {
                 type: Datatypes.STRING,

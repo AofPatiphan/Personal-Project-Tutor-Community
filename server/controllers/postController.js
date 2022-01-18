@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const userDao = require('../dbs/dao/userDao');
-const { Post, User, Comment, Like } = require('../dbs/models/index');
+const { Op } = require('sequelize');
+
+const { Post, User, Comment, Like, Friend } = require('../dbs/models/index');
 
 exports.getAllPost = async (req, res, next) => {
     try {
@@ -43,6 +45,50 @@ exports.getAllPost = async (req, res, next) => {
             ],
         });
         res.status(200).json({ posts });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.getFriendPost = async (req, res, next) => {
+    try {
+        const friends = await Friend.findAll({
+            include: [
+                {
+                    model: User,
+                    // include: [
+                    //     {
+                    //         model: Post,
+                    //     },
+                    // ],
+                    attributes: {
+                        exclude: ['password', 'createdAt', 'updatedAt'],
+                    },
+                },
+            ],
+            where: {
+                status: 'FRIEND',
+                [Op.or]: [
+                    { request_to_id: req.user.id },
+                    { request_by_id: req.user.id },
+                ],
+            },
+        });
+        const friendsIds = friends.reduce((acc, item) => {
+            if (req.user.id === item.request_by_id) {
+                acc.push(item.request_to_id);
+            } else {
+                acc.push(item.request_by_id);
+            }
+            return acc;
+        }, []);
+        const usersPost = await Post.findAll({
+            where: { id: friendsIds },
+            // attributes: {
+            //     excludes: ['password'],
+            // },
+        });
+        res.status(200).json({ usersPost });
     } catch (err) {
         next(err);
     }

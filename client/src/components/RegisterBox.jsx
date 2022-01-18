@@ -19,6 +19,7 @@ function RegisterBox() {
         username,
         setUsername,
         setLoading,
+        loading,
         setImageUrl,
     } = useContext(AuthContext);
 
@@ -196,16 +197,30 @@ function RegisterBox() {
                             />
                         </div>
                         <div className="mb-2 form-check"></div>
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            style={{
-                                width: '100%',
-                                borderRadius: '10px',
-                            }}
-                        >
-                            Register
-                        </button>
+                        {!loading ? (
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                style={{
+                                    width: '100%',
+                                    borderRadius: '10px',
+                                }}
+                            >
+                                Register
+                            </button>
+                        ) : (
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                style={{
+                                    width: '100%',
+                                    borderRadius: '10px',
+                                }}
+                                disable
+                            >
+                                Register
+                            </button>
+                        )}
                     </div>
                 </form>
             </div>

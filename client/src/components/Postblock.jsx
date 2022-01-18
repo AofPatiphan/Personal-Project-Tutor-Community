@@ -76,6 +76,7 @@ function Postblock() {
     const handleClickHideboxPost = (e) => {
         e.preventDefault();
         setHideboxPost(false);
+        setPicture('');
     };
 
     return (

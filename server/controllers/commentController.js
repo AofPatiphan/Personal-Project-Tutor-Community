@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { Comment, Post } = require('../dbs/models/index');
+const { Op } = require('sequelize');
+
+const { Comment, Post, User, Like } = require('../dbs/models/index');
 
 exports.getAllComment = async (req, res, next) => {
     try {
@@ -72,7 +74,7 @@ exports.updateComment = async (req, res, next) => {
             }
         );
         if (affectedRow === 0) {
-            res.status(400).json({ message: 'cannot update todo' });
+            res.status(400).json({ message: 'cannot update comment' });
         }
 
         const comment = await Comment.findOne({ where: { id } });
@@ -90,7 +92,7 @@ exports.deleteComment = async (req, res, next) => {
         const result = await Comment.destroy({
             where: {
                 id,
-                userId: req.user.id,
+                // userId: req.user.id,
             },
         });
         if (result === 0) {

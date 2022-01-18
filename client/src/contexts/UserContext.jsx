@@ -5,16 +5,8 @@ const UserContext = createContext();
 
 function UserContextProvider(props) {
     const [userData, setUserData] = useState([]);
-
-    // Get data home
-    // useEffect(() => {
-    //     const fetchPost = async () => {
-    //         const res = await axios.get('/post/all');
-    //         setPostHome(res.data.posts);
-    //     };
-    //     fetchPost();
-    // }, []);
-
+    const [friend, setFriend] = useState([]);
+    const [allFriend, setAllFriend] = useState([]);
     // Get data profile
     const token = localStorage.getItem('token');
     const fetchUser = async (tokenInput) => {
@@ -22,6 +14,7 @@ function UserContextProvider(props) {
         const res = await axios.get(`/user/${a.username}`);
         setUserData(res.data.user);
     };
+    console.log(allFriend);
 
     useEffect(() => {
         if (token) {
@@ -29,14 +22,32 @@ function UserContextProvider(props) {
         }
     }, [token]);
 
-    // const addPost = async ({ title }) => {
-    //     const res = await axios.post('/post', {
-    //         caption: title,
-    //     });
-    //     const nextPost = [res.data.post, ...post];
-    //     console.log(res.data);
-    //     setPostHome(nextPost);
-    // };
+    const getAllFriendRequest = async () => {
+        const res = await axios.get('/friend');
+        setFriend(res.data.friends);
+    };
+    useEffect(() => {
+        getAllFriendRequest();
+    }, []);
+
+    // request friend
+    const request = async ({ receiver, requester }) => {
+        console.log(receiver);
+        const res = await axios.post(`/friend`, {
+            requestToId: receiver,
+            requestById: requester,
+        });
+    };
+
+    // Get Allfriends
+    const getAllFriend = async (id) => {
+        const res = await axios.get(`/friend/`);
+        setAllFriend(res.data.users || {});
+        console.log(res.data.users);
+    };
+    useEffect(() => {
+        getAllFriend();
+    }, []);
 
     // const updatePost = async (id, value) => {
     //     const idx = post.findIndex((item) => item.id === id);
@@ -56,7 +67,16 @@ function UserContextProvider(props) {
     // // };
 
     return (
-        <UserContext.Provider value={{ userData, fetchUser, setUserData }}>
+        <UserContext.Provider
+            value={{
+                userData,
+                fetchUser,
+                setUserData,
+                request,
+                friend,
+                allFriend,
+            }}
+        >
             {props.children}
         </UserContext.Provider>
     );

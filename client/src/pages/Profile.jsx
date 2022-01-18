@@ -33,6 +33,10 @@ function Profile() {
         fetchUser();
     }, [username]);
 
+    if (!person) {
+        return <></>;
+    }
+
     return (
         <>
             <div

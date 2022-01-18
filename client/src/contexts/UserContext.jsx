@@ -14,8 +14,6 @@ function UserContextProvider(props) {
         const res = await axios.get(`/user/${a.username}`);
         setUserData(res.data.user);
     };
-    console.log(allFriend);
-
     useEffect(() => {
         if (token) {
             fetchUser();
@@ -43,7 +41,6 @@ function UserContextProvider(props) {
     const getAllFriend = async (id) => {
         const res = await axios.get(`/friend/`);
         setAllFriend(res.data.users || {});
-        console.log(res.data.users);
     };
     useEffect(() => {
         getAllFriend();

@@ -8,10 +8,12 @@ import axios from '../config/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import { UserContext } from '../contexts/UserContext';
 
 function Profile() {
     const { user } = useContext(AuthContext);
 
+    const { allFriend } = useContext(UserContext);
     const { postProfile, setPostProfile } = useContext(PostContext);
     const { username } = useParams();
     const [person, setPerson] = useState('');
@@ -24,6 +26,7 @@ function Profile() {
         fetchPost();
     }, [username]);
 
+    console.log(allFriend);
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`/user/${username}`);
@@ -32,6 +35,10 @@ function Profile() {
 
         fetchUser();
     }, [username]);
+
+    const result = allFriend.findIndex((item) => item.username === username);
+    console.log(result !== -1 || user.username === username);
+    //    if(result===-1)
 
     if (!person) {
         return <></>;
@@ -49,9 +56,15 @@ function Profile() {
                 <ProfileHeader person={person} />
                 {user.username === username ? <Postbar person={person} /> : ''}
                 {postProfile.map((el) => {
-                    return (
-                        <Postitem postitem={el} key={el.id} person={person} />
-                    );
+                    if (result !== -1 || user.username === username) {
+                        return (
+                            <Postitem
+                                postitem={el}
+                                key={el.id}
+                                person={person}
+                            />
+                        );
+                    }
                 })}
             </div>
         </>

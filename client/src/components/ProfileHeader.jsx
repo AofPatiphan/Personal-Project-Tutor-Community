@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { Link, useParams } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { PostContext } from '../contexts/PostContext';
 import { UserContext } from '../contexts/UserContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -9,6 +11,7 @@ import axios from 'axios';
 function ProfileHeader({ person }) {
     const { username } = useParams();
     const { user } = useContext(AuthContext);
+    const { fetchPost, fetchPostProfile } = useContext(PostContext);
     const { request } = useContext(UserContext);
 
     const [friendById, setFriendById] = useState({});
@@ -27,17 +30,20 @@ function ProfileHeader({ person }) {
     const acceptRequest = async (id) => {
         const res = await axios.put(`/friend/${id}/${person.id}`);
         setFriendById(res.data.friend || {});
+        fetchPost();
+        fetchPostProfile();
     };
 
     const unFriend = async (id) => {
         const res = await axios.delete(`/friend/${id}/${person.id}`);
         setFriendById(res.data.friend || {});
+        fetchPost();
+        fetchPostProfile();
     };
 
     useEffect(() => {
         getFriendRequestById(user.id);
     }, [username]);
-
     useEffect(() => {
         checkfriend();
     }, [friendById]);

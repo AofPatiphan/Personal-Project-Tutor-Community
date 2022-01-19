@@ -1,6 +1,9 @@
 import axios from '../config/axios';
 import { createContext, useState, useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
+import * as localStorageService from '../services/localStorage';
+import { API_ENDPOINT_URL } from '../config/env';
+import io from 'socket.io-client';
 const UserContext = createContext();
 
 function UserContextProvider(props) {
@@ -8,8 +11,12 @@ function UserContextProvider(props) {
     const [friend, setFriend] = useState([]);
     const [allFriend, setAllFriend] = useState([]);
     const [profileCard, setProfileCard] = useState([]);
+    const [socket, setSocket] = useState(null);
+    // Get data profile
+
     // Get data profile
     const token = localStorage.getItem('token');
+
     const fetchUser = async (tokenInput) => {
         const a = jwtDecode(token || tokenInput);
         const res = await axios.get(`/user/${a.username}`);
@@ -17,6 +24,13 @@ function UserContextProvider(props) {
     };
     useEffect(() => {
         if (token) {
+            const newSocket = io.connect(API_ENDPOINT_URL, {
+                query: {
+                    token: localStorageService.getToken(),
+                },
+            });
+            console.log('connect');
+            setSocket(newSocket);
             fetchUser();
         }
     }, [token]);
@@ -54,7 +68,6 @@ function UserContextProvider(props) {
     useEffect(() => {
         getUserById();
     }, []);
-    console.log(profileCard);
 
     // const updatePost = async (id, value) => {
     //     const idx = post.findIndex((item) => item.id === id);
@@ -85,6 +98,8 @@ function UserContextProvider(props) {
                 profileCard,
                 getAllFriendRequest,
                 getUserById,
+                socket,
+                setSocket,
             }}
         >
             {props.children}

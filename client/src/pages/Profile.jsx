@@ -26,7 +26,6 @@ function Profile() {
         fetchPost();
     }, [username]);
 
-    console.log(allFriend);
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`/user/${username}`);
@@ -37,8 +36,6 @@ function Profile() {
     }, [username]);
 
     const result = allFriend.findIndex((item) => item.username === username);
-    console.log(result !== -1 || user.username === username);
-    //    if(result===-1)
 
     if (!person) {
         return <></>;

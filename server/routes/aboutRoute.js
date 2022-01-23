@@ -10,3 +10,5 @@ router.post('/', auth, aboutController.createAbout);
 router.put('/:id', auth, aboutController.updateAbout);
 
 module.exports = router;
+
+module.exports = router;

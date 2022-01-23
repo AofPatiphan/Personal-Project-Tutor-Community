@@ -7,16 +7,7 @@ import { useState } from 'react';
 function Header() {
     const { logout, user } = useContext(AuthContext);
     const { userData, getUserById } = useContext(UserContext);
-    const [search, setSearch] = useState('');
 
-    const navigate = useNavigate();
-
-    const handleSubmitSearch = (e) => {
-        e.preventDefault();
-        getUserById(search);
-        navigate('/findfriend');
-        setSearch('');
-    };
     return (
         <div>
             <div style={{ position: 'fixed', width: '100%' }}>
@@ -43,8 +34,8 @@ function Header() {
                                     />
                                 </Link>
                             </div>
-                            <div>
-                                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                            <div style={{ marginLeft: '100px' }}>
+                                <ul className="navbar-nav  mb-2 mb-lg-0">
                                     <li
                                         className="nav-item "
                                         style={{
@@ -102,33 +93,24 @@ function Header() {
                                             Chat
                                         </Link>
                                     </li>
+                                    <li
+                                        className="nav-item "
+                                        style={{
+                                            width: '100px',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        <Link
+                                            to={'/findfriend'}
+                                            className="nav-link "
+                                        >
+                                            Friends
+                                        </Link>
+                                    </li>
                                 </ul>
                             </div>
                             <div>
                                 <div className="d-flex">
-                                    <div>
-                                        <form
-                                            className="d-flex"
-                                            onSubmit={handleSubmitSearch}
-                                        >
-                                            <input
-                                                className="form-control me-2"
-                                                type="search"
-                                                placeholder="Search"
-                                                value={search}
-                                                style={{ borderRadius: '30px' }}
-                                                onChange={(e) =>
-                                                    setSearch(e.target.value)
-                                                }
-                                            />
-                                            <button
-                                                className="btn"
-                                                type="submit"
-                                            >
-                                                <i className="bi bi-search"></i>
-                                            </button>
-                                        </form>
-                                    </div>
                                     <div
                                         className="ms-4"
                                         style={{

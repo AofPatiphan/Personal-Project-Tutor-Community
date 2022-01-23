@@ -5,6 +5,7 @@ import PostContextProvider from './contexts/PostContext';
 import UserContextProvider from './contexts/UserContext';
 import CommentContextProvider from './contexts/CommentContext';
 import SocketContextProvider from './contexts/SocketContext';
+import ChatContextProvider from './contexts/ChatContext';
 
 function App() {
     return (
@@ -13,9 +14,11 @@ function App() {
                 <SocketContextProvider>
                     <PostContextProvider>
                         <CommentContextProvider>
-                            <div style={{ height: '100vh' }}>
-                                <Router />
-                            </div>
+                            <ChatContextProvider>
+                                <div style={{ height: '100vh' }}>
+                                    <Router />
+                                </div>
+                            </ChatContextProvider>
                         </CommentContextProvider>
                     </PostContextProvider>
                 </SocketContextProvider>

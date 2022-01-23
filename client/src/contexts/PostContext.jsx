@@ -13,7 +13,7 @@ function PostContextProvider(props) {
     const [title, setTitle] = useState('');
     const [visible, serVisible] = useState(false);
     const [hideboxPost, setHideboxPost] = useState(false);
-
+    console.log(post);
     // Get data home
     const fetchPost = async () => {
         const res = await axios.get('/post/');

@@ -1,3 +1,4 @@
+import timeSince from '../../services/timeSince';
 import './message.css';
 
 export default function Message({ own, message, userData }) {
@@ -5,18 +6,10 @@ export default function Message({ own, message, userData }) {
     return (
         <div className={own ? 'message own' : 'message'}>
             <div className="messageTop">
-                <img
-                    className="messageImg"
-                    src={
-                        own
-                            ? userData.profileUrl
-                            : 'https://res.cloudinary.com/dbtlgaii3/image/upload/v1642433118/wnq1u0q941xkkrmjwjej.jpg'
-                    }
-                    alt=""
-                />
-                <p className="messageText">{message}</p>
+                <img className="messageImg" src={message.profileUrl} alt="" />
+                <p className="messageText">{message.message}</p>
             </div>
-            <div className="messageBottim">1 hour ago</div>
+            <div className="messageBottim"> {timeSince(message.time)}</div>
         </div>
     );
 }

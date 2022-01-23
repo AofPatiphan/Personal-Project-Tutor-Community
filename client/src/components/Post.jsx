@@ -6,6 +6,7 @@ import { UserContext } from '../contexts/UserContext';
 import { AuthContext } from '../contexts/AuthContext';
 import Editblock from './Editblock';
 import axios from 'axios';
+import timeSince from '../services/timeSince';
 
 function Post({
     postitem: {
@@ -117,7 +118,7 @@ function Post({
                                 {User.firstName}
                             </h6>
                             <p style={{ fontSize: '11px' }}>
-                                {new Date(createdAt).toDateString()}
+                                {timeSince(createdAt)}
                             </p>
                         </div>
                     </div>

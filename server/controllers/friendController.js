@@ -1,5 +1,6 @@
-const { Friend, User } = require('../dbs/models/index');
+const { Friend, User, sequelize } = require('../dbs/models/index');
 const { Op } = require('sequelize');
+const friendDao = require('../dbs/function/friendDao');
 
 exports.getAll = async (req, res, next) => {
     try {
@@ -26,7 +27,58 @@ exports.getAll = async (req, res, next) => {
                 excludes: ['password'],
             },
         });
-        res.status(200).json({ users });
+        const mutualFriends = await friendDao.countMutualFriend({
+            userId: req.user.id,
+            friendsIds,
+        });
+        const userWithMutual = users.map((user) => {
+            return {
+                ...user.toJSON(),
+                mutualFriend: mutualFriends[user.id].length,
+            };
+        });
+        res.status(200).json({ users: userWithMutual });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.getRequest = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const friend = await Friend.findAll({
+            where: {
+                [Op.and]: [
+                    { [Op.or]: [{ request_by_id: id }, { request_to_id: id }] },
+                    { status: 'PENDONG' },
+                ],
+            },
+        });
+        const friendsIds = friend.reduce((acc, item) => {
+            if (req.user.id === item.request_by_id) {
+                acc.push(item.request_to_id);
+            } else {
+                acc.push(item.request_by_id);
+            }
+            return acc;
+        }, []);
+        const users = await User.findAll({
+            where: { id: friendsIds },
+            attributes: {
+                excludes: ['password'],
+            },
+        });
+        const mutualFriends = await friendDao.countMutualFriend({
+            userId: req.user.id,
+            friendsIds,
+        });
+        const userWithMutual = users.map((user) => {
+            return {
+                ...user.toJSON(),
+                mutualFriend: mutualFriends[user.id].length,
+            };
+        });
+        res.status(200).json({ users: userWithMutual });
     } catch (err) {
         next(err);
     }
@@ -46,6 +98,83 @@ exports.getById = async (req, res, next) => {
             },
         });
         res.status(200).json({ friend });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.getMtFriend = async (req, res, next) => {
+    try {
+        const { id1, id2 } = req.params;
+
+        const friend1 = await Friend.findAll({
+            where: {
+                // [Op.and]: [{ id1: {[Op.in]:request_by_id} }, { id2: 6 }]
+
+                [Op.and]: [
+                    {
+                        [Op.or]: [
+                            { request_by_id: id1 },
+                            // { request_to_id: id1 },
+                            // { request_by_id: id2 },
+                            { request_to_id: id1 },
+                        ],
+                    },
+                    { status: 'FRIEND' },
+                ],
+            },
+        });
+
+        const friend2 = await Friend.findAll({
+            where: {
+                // [Op.and]: [{ id1: {[Op.in]:request_by_id} }, { id2: 6 }]
+
+                [Op.and]: [
+                    {
+                        [Op.or]: [
+                            { request_by_id: id2 },
+                            // { request_to_id: id1 },
+                            // { request_by_id: id2 },
+                            { request_to_id: id2 },
+                        ],
+                    },
+                    { status: 'FRIEND' },
+                ],
+            },
+        });
+        const idFriend1 = new Set();
+        friend1.forEach((element) => {
+            if (id1 != element.request_by_id) {
+                idFriend1.add(element.request_by_id);
+            } else {
+                idFriend1.add(element.request_to_id);
+            }
+        });
+        let mutualfriend = [];
+        friend2.forEach((element) => {
+            if (
+                id2 != element.request_by_id &&
+                idFriend1.has(element.request_by_id)
+            ) {
+                mutualfriend.push(element.request_by_id);
+                return;
+            }
+            if (
+                id2 != element.request_to_id &&
+                idFriend1.has(element.request_to_id)
+            ) {
+                mutualfriend.push(element.request_t0_id);
+
+                return;
+            }
+        });
+        const mutualFriendInfo = await User.findAll({
+            where: {
+                id: mutualfriend,
+            },
+        });
+
+        res.status(200).json({ mutualFriend: mutualFriendInfo });
     } catch (err) {
         next(err);
     }

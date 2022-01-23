@@ -1,14 +1,23 @@
 import './conversation.css';
+import { useNavigate } from 'react-router-dom';
 
-export default function Conversation() {
+export default function Conversation({ room }) {
+    const navigate = useNavigate();
     return (
-        <div className="conversation">
-            <img
-                src="https://res.cloudinary.com/dbtlgaii3/image/upload/v1642433118/wnq1u0q941xkkrmjwjej.jpg"
-                alt=""
-                className="conversationImg"
-            />
-            <span className="conversationName">John Doe</span>
+        <div
+            className="conversation"
+            onClick={() => {
+                navigate(`/messenger/${room.friendId}`);
+            }}
+        >
+            <img src={room.profileUrl} alt="" className="conversationImg" />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className="conversationName"></span>
+                {room.firstName} {room.lastName}
+                <span className="conversationName" style={{ fontSize: '13px' }}>
+                    {room.message}
+                </span>
+            </div>
         </div>
     );
 }

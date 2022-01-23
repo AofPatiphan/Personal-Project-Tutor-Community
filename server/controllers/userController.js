@@ -1,5 +1,6 @@
 const { User } = require('../dbs/models/index');
 const { Op } = require('sequelize');
+const friendDao = require('../dbs/function/friendDao');
 
 exports.getAllUser = async (req, res, next) => {
     try {
@@ -23,10 +24,7 @@ exports.getUserByUsername = async (req, res, next) => {
 exports.getUserByName = async (req, res, next) => {
     try {
         const { name } = req.params;
-        console.log(1);
-        console.log(req.user.firstName);
-        console.log(1);
-        const user = await User.findAll({
+        const users = await User.findAll({
             where: {
                 [Op.or]: [
                     { firstName: { [Op.like]: `%${name}%` } },
@@ -35,7 +33,21 @@ exports.getUserByName = async (req, res, next) => {
                 [Op.not]: { firstName: req.user.firstName },
             },
         });
-        res.status(200).json({ user });
+        const userId = users.map((user) => user.id);
+
+        const mutualFriends = await friendDao.countMutualFriend({
+            userId: req.user.id,
+            friendsIds: userId,
+        });
+
+        const userWithMutual = users.map((user) => {
+            return {
+                ...user.toJSON(),
+                mutualFriend: mutualFriends[user.id].length,
+            };
+        });
+        res.status(200).json({ user: userWithMutual });
+        // res.status(200).json({ user });
     } catch (err) {
         next(err);
     }

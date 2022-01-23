@@ -21,6 +21,9 @@ function Cardprofile({ profileData }) {
         const res = await axios.get(`/friend/${id}/${profileData.id}`);
         setFriendById(res.data.friend || {});
     };
+    useEffect(() => {
+        getFriendRequestById(user.id);
+    }, [username]);
 
     const cancelRequest = async (id) => {
         const res = await axios.delete(`/friend/${id}/${profileData.id}`);
@@ -41,13 +44,6 @@ function Cardprofile({ profileData }) {
         fetchPost();
         fetchPostProfile();
     };
-
-    useEffect(() => {
-        getFriendRequestById(user.id);
-    }, [username]);
-    useEffect(() => {
-        checkfriend();
-    }, [friendById]);
 
     const handleClickRequest = async (e) => {
         e.preventDefault();
@@ -100,14 +96,20 @@ function Cardprofile({ profileData }) {
             return setButtonStatus('Accept request');
         }
     };
+    useEffect(() => {
+        checkfriend();
+    }, [friendById]);
 
     return (
         <div
-            className="card mb-3"
-            style={{ borderRadius: '8px', width: '450px' }}
+            className="card mb-3 mt-3"
+            style={{
+                borderRadius: '8px',
+                width: '100%',
+            }}
         >
             <div className="row g-0">
-                <div className="col-md-4">
+                <div className="col-md-2">
                     <Link to={`/profile/${profileData.username}`}>
                         <img
                             src={`${profileData.profileUrl}`}
@@ -122,11 +124,14 @@ function Cardprofile({ profileData }) {
                         />
                     </Link>
                 </div>
-                <div className="col-md-8">
+                <div className="col-md-10 d-flex">
                     <div className="card-body">
                         <h5 className="card-title">
                             {`${profileData.firstName} ${profileData.lastName}`}
                         </h5>
+                        <p> {profileData.mutualFriend} mutual friend</p>
+                    </div>
+                    <div style={{ paddingTop: '28px' }}>
                         <div style={{ marginTop: '20px' }}>
                             <button
                                 style={{

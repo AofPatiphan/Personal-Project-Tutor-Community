@@ -18,10 +18,12 @@
 
 .messageText {
     padding: 10px;
-    border-radius: 20px;
+    border-radius: 8px;
     background-color: #1877f2;
     color: white;
     max-width: 300px;
+    word-break: break-all;
+    white-space: normal;
 }
 
 .messageBottom {

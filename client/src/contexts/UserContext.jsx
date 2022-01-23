@@ -10,10 +10,9 @@ function UserContextProvider(props) {
     const [userData, setUserData] = useState([]);
     const [friend, setFriend] = useState([]);
     const [allFriend, setAllFriend] = useState([]);
+    const [allRequestFriend, setAllRequestFriend] = useState([]);
     const [profileCard, setProfileCard] = useState([]);
     const [socket, setSocket] = useState(null);
-    // Get data profile
-
     // Get data profile
     const token = localStorage.getItem('token');
 
@@ -35,14 +34,6 @@ function UserContextProvider(props) {
         }
     }, [token]);
 
-    const getAllFriendRequest = async () => {
-        const res = await axios.get('/friend');
-        setFriend(res.data.friends);
-    };
-    useEffect(() => {
-        getAllFriendRequest();
-    }, []);
-
     // request friend
     const request = async ({ receiver, requester }) => {
         console.log(receiver);
@@ -54,13 +45,23 @@ function UserContextProvider(props) {
 
     // Get Allfriends
     const getAllFriend = async (id) => {
-        const res = await axios.get(`/friend/`);
+        const res = await axios.get(`/friend`);
         setAllFriend(res.data.users || {});
     };
     useEffect(() => {
         getAllFriend();
     }, []);
 
+    // Get Allfriends Request ใช้กับหน้า search
+    const getAllRequest = async (id) => {
+        const res = await axios.get(`/friend/${id}`);
+        setAllRequestFriend(res.data.users || {});
+    };
+    useEffect(() => {
+        getAllRequest();
+    }, []);
+
+    // search จากชื่อ
     const getUserById = async (name) => {
         const res = await axios.get(`/user/name/${name}`);
         setProfileCard(res.data.user || {});
@@ -96,10 +97,12 @@ function UserContextProvider(props) {
                 friend,
                 allFriend,
                 profileCard,
-                getAllFriendRequest,
                 getUserById,
                 socket,
                 setSocket,
+                getAllFriend,
+                allRequestFriend,
+                getAllRequest,
             }}
         >
             {props.children}

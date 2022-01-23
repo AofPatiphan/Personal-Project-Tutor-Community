@@ -15,16 +15,17 @@ import PublicLayout from './layouts/PublicLayout';
 
 const routes = {
     guest: [
-        { path: '/login', element: <Login /> },
+        { path: '/', element: <Login /> },
         { path: '/register', element: <Register /> },
-        { path: '*', element: <Navigate to="/login" replace={true} /> },
+        { path: '*', element: <Navigate to="/" replace={true} /> },
     ],
     user: [
         { path: '/profile/:username', element: <Profile /> },
         { path: '/', element: <Home /> },
         { path: '/about', element: <About /> },
         { path: '/findfriend', element: <Findfriend /> },
-        { path: '/messenger', element: <Messenger /> },
+        { path: '/messenger/:id', element: <Messenger /> },
+        { path: '/messenger/', element: <Messenger /> },
         { path: '*', element: <Navigate to="/" replace={true} /> },
     ],
 };

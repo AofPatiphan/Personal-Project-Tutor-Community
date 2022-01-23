@@ -59,9 +59,6 @@ function ProfileHeader({ person }) {
         if (!friendById.status) {
             await request({ receiver: person.id, requester: user.id });
         }
-        // if (!friendById.status) {
-        //     await request({ receiver: person.id, requester: user.id });
-        // }
         if (
             friendById.status === 'PENDONG' &&
             user.id === friendById.request_by_id

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const userDao = require('../dbs/dao/userDao');
+const userDao = require('../dbs/function/userDao');
 const { Op } = require('sequelize');
 
 const { Post, User, Comment, Like, Friend } = require('../dbs/models/index');
@@ -25,7 +25,6 @@ exports.getAllPost = async (req, res, next) => {
                             },
                         },
                     ],
-                    order: [[Comment, 'createdAt', 'ASC']],
                 },
                 {
                     model: Like,
@@ -99,7 +98,6 @@ exports.getFriendPost = async (req, res, next) => {
                             },
                         },
                     ],
-                    order: [[Comment, 'createdAt', 'ASC']],
                 },
                 {
                     model: Like,
@@ -193,7 +191,6 @@ exports.getPostById = async (req, res, next) => {
                             },
                         },
                     ],
-                    order: [[Comment, 'createdAt', 'ASC']],
                 },
                 {
                     model: Like,
@@ -210,7 +207,6 @@ exports.getPostById = async (req, res, next) => {
                 },
             ],
 
-            // order: [['createdAt', 'DESC']],
             order: [
                 ['createdAt', 'DESC'],
                 [Comment, 'createdAt', 'ASC'],

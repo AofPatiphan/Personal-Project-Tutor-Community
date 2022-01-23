@@ -11,6 +11,9 @@ import { useState } from 'react';
 function Postblock() {
     const { username } = useParams();
 
+    // const modalEl = useRef()
+    // const imgInputEl = useRef()
+
     const {
         title,
         setTitle,
@@ -28,6 +31,8 @@ function Postblock() {
 
     const handleFileInputChange = async (e) => {
         // e.preventDefault();
+        // imgInputEl.current.value = null
+
         setLoading(true);
         if (!e.target.value) return;
 
@@ -77,6 +82,8 @@ function Postblock() {
         e.preventDefault();
         setHideboxPost(false);
         setPicture('');
+        setTitle('');
+        // imgInputEl.current.value = null
     };
 
     return (
@@ -140,7 +147,12 @@ function Postblock() {
                                 placeholder={`What’s on you mind, ${user.firstName}?`}
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                style={{ width: '400px', border: '0' }}
+                                style={{
+                                    width: '400px',
+                                    border: '0',
+                                    border: 'none',
+                                    outline: 'none',
+                                }}
                             ></textarea>
                         </div>
                         {picture ? (
@@ -176,6 +188,7 @@ function Postblock() {
                                     borderRadius: '8px',
                                     marginLeft: '20px',
                                 }}
+                                // ref={imgInputEl}
                                 onChange={handleFileInputChange}
                             />
                         </div>

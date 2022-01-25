@@ -1,17 +1,25 @@
 import './chatOnline.css';
+import { useNavigate } from 'react-router-dom';
 
-export default function ChatOnline() {
+export default function ChatOnline({ item }) {
+    const navigate = useNavigate();
+
+    const handleClickOpenChat = async () => {
+        navigate(`/messenger/${item.id}`);
+    };
     return (
-        <div className="chatOnlineFriend">
+        <div className="chatOnlineFriend" onClick={handleClickOpenChat}>
             <div className="chatOnlineImgContainer">
                 <img
                     className="chatOnlineImg"
-                    src="https://res.cloudinary.com/dbtlgaii3/image/upload/v1642433118/wnq1u0q941xkkrmjwjej.jpg"
+                    src={`${item.profileUrl}`}
                     alt=""
                 />
                 <div className="chatOnlineBadge"></div>
             </div>
-            <span className="chatOnlineName">John Doe</span>
+            <span className="chatOnlineName">
+                {item.firstName} {item.lastName}
+            </span>
         </div>
     );
 }

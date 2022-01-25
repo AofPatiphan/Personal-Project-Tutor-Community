@@ -12,20 +12,24 @@ import { useRef } from 'react';
 
 export default function Messenger() {
     const [inputText, setInputText] = useState('');
-    const { userData } = useContext(UserContext);
-    const { sendMessage, messages, fetchMessage } = useContext(SocketContext);
+    const { userData, allFriend, socket } = useContext(UserContext);
+    const { sendMessage, messages, fetchMessage, typingStatus, typingName } =
+        useContext(SocketContext);
     const { chatRoom, fetchFriendList } = useContext(ChatContext);
     const chatboxRef = useRef(null);
 
-    console.log(messages);
     const handleClickSend = (e) => {
         e.preventDefault();
         sendMessage({ message: inputText, userId: userData.id });
         setInputText('');
+        fetchFriendList();
     };
+
     const { id } = useParams();
     useEffect(() => {
+        console.log('fetch', id);
         if (id) {
+            console.log('fetch2');
             fetchMessage(id);
         }
         fetchFriendList();
@@ -35,9 +39,11 @@ export default function Messenger() {
         chatboxRef.current.scrollTo(0, chatboxRef.current.scrollHeight);
     });
 
-    // if(chatroom){
+    const handleChangeTyping = (e) => {
+        setInputText(e.target.value);
+        socket.emit('typing');
+    };
 
-    // }
     return (
         <div className="messenger">
             <div className="chatMenu">
@@ -50,7 +56,7 @@ export default function Messenger() {
                     {chatRoom.map((item) => (
                         <Conversation
                             room={item}
-                            key={item.id}
+                            key={item.roomId}
                             userData={userData}
                             fetchMessage={fetchMessage}
                         />
@@ -60,21 +66,26 @@ export default function Messenger() {
             <div className="chatBox">
                 <div className="chatBoxWrapper">
                     <div className="chatBoxTop" ref={chatboxRef}>
-                        {messages.map((item, index) => (
-                            <Message
-                                message={item}
-                                key={index}
-                                own={userData.id === item.userId}
-                                userData={userData}
-                            />
-                        ))}
+                        {messages.map((item, index) => {
+                            return (
+                                <Message
+                                    message={item}
+                                    key={index}
+                                    own={userData.id === item.userId}
+                                    userData={userData}
+                                />
+                            );
+                        })}
+                    </div>
+                    <div>
+                        {typingStatus ? `${typingName} is typing ...` : ''}
                     </div>
                     <div className="chatBoxBottom">
                         <textarea
                             className="chatMessageInput"
                             placeholder="write somthing..."
                             value={inputText}
-                            onChange={(e) => setInputText(e.target.value)}
+                            onChange={handleChangeTyping}
                         ></textarea>
                         <button
                             className="chatSubmitButton"
@@ -87,9 +98,13 @@ export default function Messenger() {
             </div>
             <div className="chatOnline">
                 <div className="chatOnlineWrapper">
-                    <ChatOnline />
-                    <ChatOnline />
-                    <ChatOnline />
+                    {allFriend.map((item) => (
+                        <ChatOnline
+                            item={item}
+                            key={item.id}
+                            userData={userData}
+                        />
+                    ))}
                 </div>
             </div>
         </div>

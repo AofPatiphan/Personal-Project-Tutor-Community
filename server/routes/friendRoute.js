@@ -12,6 +12,5 @@ router.get('/mutualfriend/:id1/:id2', auth, friendController.getMtFriend);
 router.post('/', auth, friendController.request);
 router.delete('/:id1/:id2', auth, friendController.cancelRequest);
 router.put('/:id1/:id2', auth, friendController.acceptRequest);
-// router.delete('/:id1/:id2', auth, friendController.rejectRequest);
 
 module.exports = router;

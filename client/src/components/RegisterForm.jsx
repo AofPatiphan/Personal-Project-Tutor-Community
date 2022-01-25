@@ -3,7 +3,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import axios from '../config/axios';
 
-function RegisterBox() {
+function RegisterForm() {
     const {
         email,
         setEmail,
@@ -29,8 +29,8 @@ function RegisterBox() {
         if (!e.target.value) return;
 
         const reader = new FileReader();
-        reader.readAsDataURL(e.target.files[0]);
 
+        reader.readAsDataURL(e.target.files[0]);
         reader.onloadend = () => {
             uploadImage(reader.result);
         };
@@ -228,4 +228,4 @@ function RegisterBox() {
     );
 }
 
-export default RegisterBox;
+export default RegisterForm;

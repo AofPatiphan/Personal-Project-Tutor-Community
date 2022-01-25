@@ -8,19 +8,19 @@ import { UserContext } from '../contexts/UserContext';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function ProfileHeader({ person }) {
+function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
     const { username } = useParams();
     const { user } = useContext(AuthContext);
     const { fetchPost, fetchPostProfile } = useContext(PostContext);
     const { request, getAllFriendRequest } = useContext(UserContext);
     const [isRequest, setIsRequest] = useState(false);
+    const [friendById, setFriendById] = useState({});
+    const [buttonStatus, setButtonStatus] = useState('');
 
     useEffect(() => {
         fetchPost();
     }, [isRequest]);
 
-    const [friendById, setFriendById] = useState({});
-    const [buttonStatus, setButtonStatus] = useState('');
     const getFriendRequestById = async (id) => {
         const res = await axios.get(`/friend/${id}/${person.id}`);
         setFriendById(res.data.friend || {});
@@ -166,36 +166,42 @@ function ProfileHeader({ person }) {
                     >
                         <li
                             style={{
-                                borderBottom: '2px solid #1877F2',
+                                borderBottom: isAboutPage
+                                    ? ``
+                                    : `2px solid #1877F2`,
                                 width: '100px',
                             }}
                         >
                             <Link
-                                to={'/profile'}
+                                to={'#'}
                                 className="nav-link "
                                 aria-current="page"
                                 style={{
-                                    color: '#1877F2',
+                                    color: isAboutPage ? '#66676B' : '#1877F2',
                                     textAlign: 'center',
                                 }}
+                                onClick={() => setIsAboutPage(false)}
                             >
                                 Post
                             </Link>
                         </li>
                         <li
                             style={{
+                                borderBottom: !isAboutPage
+                                    ? ``
+                                    : `2px solid #1877F2`,
                                 width: '100px',
                                 textAlign: 'center',
                             }}
                         >
                             <Link
-                                to={'/'}
+                                to={'#'}
                                 className="nav-link"
-                                href="#"
                                 style={{
-                                    color: '#66676B',
+                                    color: !isAboutPage ? '#66676B' : '#1877F2',
                                     textAlign: 'center',
                                 }}
+                                onClick={() => setIsAboutPage(true)}
                             >
                                 About
                             </Link>

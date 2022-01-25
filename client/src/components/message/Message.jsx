@@ -2,7 +2,6 @@ import timeSince from '../../services/timeSince';
 import './message.css';
 
 export default function Message({ own, message, userData }) {
-    console.log(message);
     return (
         <div className={own ? 'message own' : 'message'}>
             <div className="messageTop">

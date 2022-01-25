@@ -2,7 +2,7 @@ module.exports = (sequelize, Datatypes) => {
     const About = sequelize.define(
         'About',
         {
-            picture: {
+            caption: {
                 type: Datatypes.STRING,
             },
             charactor: {
@@ -11,6 +11,25 @@ module.exports = (sequelize, Datatypes) => {
                 validate: {
                     notEmpty: true,
                 },
+            },
+            subject: {
+                type: Datatypes.STRING,
+            },
+            level: {
+                type: Datatypes.STRING,
+            },
+            gender: {
+                type: Datatypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
+            phoneNumber: {
+                type: Datatypes.STRING,
+            },
+            educationLevel: {
+                type: Datatypes.STRING,
             },
         },
         {

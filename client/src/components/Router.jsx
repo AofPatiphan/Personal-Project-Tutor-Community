@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { UserContext } from '../contexts/UserContext';
@@ -12,6 +12,11 @@ import Findfriend from '../pages/Findfriend';
 import Messenger from '../pages/messenger/Messenger';
 import MainLayout from './layouts/MainLayout';
 import PublicLayout from './layouts/PublicLayout';
+import ChatContextProvider from '../contexts/ChatContext';
+import SocketContextProvider from '../contexts/SocketContext';
+import PostContextProvider from '../contexts/PostContext';
+import UserContextProvider from '../contexts/UserContext';
+import CommentContextProvider from '../contexts/CommentContext';
 
 const routes = {
     guest: [
@@ -32,9 +37,9 @@ const routes = {
 
 function Router() {
     const { user, role } = useContext(AuthContext);
-    const { userData } = useContext(UserContext);
+    // const { userData } = useContext(UserContext);
 
-    if (role == 'user' && (!user || !userData)) {
+    if (role == 'user' && !user) {
         return (
             <div className="spinner-border text-primary" role="status">
                 <span className="visually-hidden">Loading...</span>
@@ -46,17 +51,30 @@ function Router() {
         <>
             {role == 'user' ? (
                 <>
-                    <Routes>
-                        <Route path="/" element={<MainLayout />}>
-                            {routes[role].map((item) => (
-                                <Route
-                                    path={item.path}
-                                    element={item.element}
-                                    key={item.path}
-                                />
-                            ))}
-                        </Route>
-                    </Routes>
+                    <UserContextProvider>
+                        <PostContextProvider>
+                            <CommentContextProvider>
+                                <SocketContextProvider>
+                                    <ChatContextProvider>
+                                        <Routes>
+                                            <Route
+                                                path="/"
+                                                element={<MainLayout />}
+                                            >
+                                                {routes[role].map((item) => (
+                                                    <Route
+                                                        path={item.path}
+                                                        element={item.element}
+                                                        key={item.path}
+                                                    />
+                                                ))}
+                                            </Route>
+                                        </Routes>
+                                    </ChatContextProvider>
+                                </SocketContextProvider>
+                            </CommentContextProvider>
+                        </PostContextProvider>
+                    </UserContextProvider>
                 </>
             ) : (
                 <Routes>

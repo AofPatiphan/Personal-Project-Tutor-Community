@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import { PostContext } from '../contexts/PostContext';
 import { UserContext } from '../contexts/UserContext';
 import { AuthContext } from '../contexts/AuthContext';
+import YouTube from 'react-youtube';
 import Editblock from './Editblock';
 import axios from 'axios';
 import timeSince from '../services/timeSince';
@@ -86,7 +87,7 @@ function Post({
                     User,
                 }}
             />
-            <>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <div
                     style={{
                         display: 'flex',
@@ -150,7 +151,20 @@ function Post({
                         )}
                     </div>
                 </div>
-                <div>{caption}</div>
+                {caption.includes('https://www.youtube.com') ? (
+                    <div style={{ padding: '20px' }}>
+                        <iframe
+                            width="720"
+                            height="480"
+                            src={`https://www.youtube.com/embed/${
+                                caption.split('?v=')[1]
+                            }`}
+                        ></iframe>
+                    </div>
+                ) : (
+                    <div>{caption}</div>
+                )}
+
                 {pictureUrl ? (
                     <div>
                         <img
@@ -168,6 +182,7 @@ function Post({
                 ) : (
                     ''
                 )}
+                {/* </div> */}
                 <div
                     style={{
                         display: 'flex',
@@ -223,7 +238,7 @@ function Post({
                         </button>
                     </div>
                 </div>
-            </>
+            </div>
         </>
     );
 }

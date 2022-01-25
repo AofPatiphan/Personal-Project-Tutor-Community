@@ -13,7 +13,6 @@ function PostContextProvider(props) {
     const [title, setTitle] = useState('');
     const [visible, serVisible] = useState(false);
     const [hideboxPost, setHideboxPost] = useState(false);
-    console.log(post);
     // Get data home
     const fetchPost = async () => {
         const res = await axios.get('/post/');
@@ -25,12 +24,13 @@ function PostContextProvider(props) {
     }, [isLogin]);
     // Get data profile
     const fetchPostProfile = async (username) => {
+        console.log(username);
         const res = await axios.get(`/post/${username}`);
         setPostProfile(res.data.posts);
     };
-    useEffect(() => {
-        fetchPostProfile();
-    }, []);
+    // useEffect(() => {
+    // fetchPostProfile();
+    // }, []);
 
     const addPost = async ({ title, picture }) => {
         const res = await axios.post('/post', {

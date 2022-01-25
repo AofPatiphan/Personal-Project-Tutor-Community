@@ -104,28 +104,48 @@ function Comment({ commentItem, postitem }) {
                             )}
                         </form>
                     </div>
+
                     <div style={{ flexGrow: '8', textAlign: 'end' }}>
-                        <button
-                            className="btn"
-                            type="submit"
-                            onClick={() => setVisible(!visible)}
-                        >
-                            <i className="bi bi-three-dots"></i>
-                        </button>
-                        <button
-                            className="btn"
-                            type="submit"
-                            onClick={handleClickDeleteComment}
-                        >
-                            <i
-                                className="bi bi-trash"
-                                style={{ marginRight: '20px' }}
-                            ></i>
-                        </button>
+                        {commentItem.userId === user.id ? (
+                            <>
+                                <button
+                                    className="btn"
+                                    type="submit"
+                                    onClick={() => setVisible(!visible)}
+                                >
+                                    <i className="bi bi-three-dots"></i>
+                                </button>
+                                <button
+                                    className="btn"
+                                    type="submit"
+                                    onClick={handleClickDeleteComment}
+                                >
+                                    <i
+                                        className="bi bi-trash"
+                                        style={{ marginRight: '20px' }}
+                                    ></i>
+                                </button>
+                            </>
+                        ) : postitem.userId === user.id ? (
+                            <>
+                                <button
+                                    className="btn"
+                                    type="submit"
+                                    onClick={handleClickDeleteComment}
+                                >
+                                    <i
+                                        className="bi bi-trash"
+                                        style={{ marginRight: '20px' }}
+                                    ></i>
+                                </button>
+                            </>
+                        ) : (
+                            <></>
+                        )}
                     </div>
                 </div>
             ) : (
-                ''
+                <></>
             )}
         </>
     );

@@ -5,12 +5,14 @@ import jwtDecode from 'jwt-decode';
 import * as localStorageService from '../services/localStorage';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
+import { ErrContext } from '../contexts/ErrContext';
 const AuthContext = createContext();
 
 function AuthContextProvider(props) {
     const [user, setUser] = useState(null);
-    const { fetchUser, setUserData } = useContext(UserContext);
-    const [isLogin, setIsLogin] = useState(false);
+    // const { fetchUser, setUserData } = useContext(UserContext);
+    const { error, setError } = useContext(ErrContext);
+    const [isLogin, setIsLogin] = useState('');
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -24,31 +26,31 @@ function AuthContextProvider(props) {
     const login = async (token) => {
         await localStorageService.setToken(token);
         setUser(jwtDecode(token));
-        navigate('/');
         setRole('user');
-        fetchUser(token);
-        setIsLogin(true);
+        // fetchUser(token);
+        setIsLogin('Login Completed');
+        navigate('/');
     };
 
     const logout = () => {
         localStorageService.removeToken();
         setUser(null);
-        navigate('/login');
         setRole('guest');
-        setUserData(null);
-        setIsLogin(false);
+        // setUserData(null);
+        setIsLogin('');
+        navigate('/login');
     };
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [role, setRole] = useState(localStorageService.getRole());
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
+    const [registerCompleted, setRegisterCompleted] = useState('');
 
     const handleSubmitLogin = (e) => {
         e.preventDefault();
@@ -59,8 +61,8 @@ function AuthContextProvider(props) {
             })
             .catch((err) => {
                 console.log(err);
-                setError('Invalid username or password');
-                setTimeout(() => setError(''), 5000);
+                setError(err.response.data.message);
+                setTimeout(() => setError(''), 3000);
             });
     };
 
@@ -77,7 +79,9 @@ function AuthContextProvider(props) {
                 profileUrl: imageUrl,
             })
             .then((res) => {
+                setRegisterCompleted('You has already registered');
                 navigate('/login');
+                setTimeout(() => setRegisterCompleted(''), 5000);
             })
             .then((res) => {
                 setFirstName('');
@@ -89,7 +93,8 @@ function AuthContextProvider(props) {
 
             .catch((err) => {
                 console.log(err);
-                setError('Pleast completed form');
+                setError(err.response.data.message);
+                setTimeout(() => setError(''), 3000);
             });
     };
     return (
@@ -122,6 +127,7 @@ function AuthContextProvider(props) {
                 imageUrl,
                 setImageUrl,
                 isLogin,
+                registerCompleted,
             }}
         >
             {props.children}

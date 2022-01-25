@@ -14,8 +14,20 @@ exports.register = async (req, res, next) => {
             profileUrl,
         } = req.body;
 
-        if (password !== confirmPassword)
-            return res.status(400).json({ message: 'password did not match' });
+        if (firstName === '')
+            return res.status(400).json({ message: 'firstname is require' });
+
+        if (lastName === '')
+            return res.status(400).json({ message: 'lastname is require' });
+
+        if (username === '')
+            return res.status(400).json({ message: 'username is require' });
+
+        if (email === '')
+            return res.status(400).json({ message: 'email is require' });
+
+        if (password === '' || password === null || password === undefined)
+            return res.status(400).json({ message: 'Please input password' });
 
         const existUsername = await User.findOne({ where: { username } });
         if (existUsername) {

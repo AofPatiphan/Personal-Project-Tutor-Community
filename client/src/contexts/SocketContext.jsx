@@ -1,25 +1,23 @@
-import axios from '../config/axios';
 import { createContext, useState, useEffect, useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 
 const SocketContext = createContext();
 
 function SocketContextProvider(props) {
-    const { socket, setSocket } = useContext(UserContext);
+    const { socket, userData, setSocket } = useContext(UserContext);
     const [messages, setMessages] = useState([]);
     const [roomId, setRoomId] = useState([]);
+    const [typingStatus, setTypingStatus] = useState(false);
+    const [typingName, setTypingName] = useState(null);
 
     //receive message
-
-    // send message
-
     useEffect(() => {
         socket?.on('receive_message', ({ message }) => {
             setMessages((currentMessage) => [...currentMessage, ...message]);
         });
         socket?.on('room-data', ({ roomData, chatRoomId }) => {
-            console.log(roomData);
             setRoomId(chatRoomId);
+            console.log(roomData);
             const temp = roomData.map((item) => {
                 return {
                     message: item.message,
@@ -31,23 +29,42 @@ function SocketContextProvider(props) {
                 };
             });
             setMessages(temp);
+            console.log(temp);
+        });
+        socket?.on('typing', ({ firstName }) => {
+            setTypingStatus(true);
+            setTypingName(firstName);
+            setTimeout(() => {
+                setTypingStatus(false);
+                setTypingName('');
+            }, 5000);
         });
     }, [socket]);
 
+    // send message
     const sendMessage = ({ message, userId }) => {
-        console.log(message);
         socket.emit('send_message', {
             message,
             userId,
         });
     };
 
+    // join room
     const fetchMessage = async (id) => {
-        socket.emit('join', { friendId: id });
+        console.log(userData);
+        await socket?.emit('join', { friendId: id });
     };
 
     return (
-        <SocketContext.Provider value={{ sendMessage, messages, fetchMessage }}>
+        <SocketContext.Provider
+            value={{
+                sendMessage,
+                messages,
+                fetchMessage,
+                typingStatus,
+                typingName,
+            }}
+        >
             {props.children}
         </SocketContext.Provider>
     );

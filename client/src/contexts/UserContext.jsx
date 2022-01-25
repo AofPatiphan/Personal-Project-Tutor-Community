@@ -7,7 +7,7 @@ import io from 'socket.io-client';
 const UserContext = createContext();
 
 function UserContextProvider(props) {
-    const [userData, setUserData] = useState([]);
+    const [userData, setUserData] = useState(null);
     const [friend, setFriend] = useState([]);
     const [allFriend, setAllFriend] = useState([]);
     const [allRequestFriend, setAllRequestFriend] = useState([]);
@@ -28,7 +28,6 @@ function UserContextProvider(props) {
                     token: localStorageService.getToken(),
                 },
             });
-            console.log('connect');
             setSocket(newSocket);
             fetchUser();
         }
@@ -86,6 +85,9 @@ function UserContextProvider(props) {
     // //     const newTodo = todoList.filter((item) => item.id !== id);
     // //     setTodoList(newTodo);
     // // };
+    if (!userData) {
+        return <></>;
+    }
 
     return (
         <UserContext.Provider

@@ -59,20 +59,17 @@ app.use((err, req, res, next) => {
 
 // *****socket.io*****
 
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-    res.render('app');
-});
+// app.get('/', (req, res) => {
+//     res.render('app');
+// });
 
 // Initialize socket for the server
 const jwt = require('jsonwebtoken');
-
-const http = require('http');
+const http = require('http'); //setup socket.io
 const db = require('./dbs/models');
 const server = http.createServer(app);
 
+// ให้ทุกคนที่เข้ามา server นี้สามารถใช้งานได้ โดยมี method เป็น get & post
 const io = require('socket.io')(server, {
     cors: {
         origin: 'http://localhost:3000',
@@ -80,6 +77,7 @@ const io = require('socket.io')(server, {
     },
 });
 
+// เช็คว่า user นี้สามารถเชื่อมต่อได้หรือไม่ ถ้า token หมดอายุจะไม่สามารถเชื่อมต่อได้
 io.use(async (socket, next) => {
     try {
         const token = socket.handshake.query.token;
@@ -87,6 +85,7 @@ io.use(async (socket, next) => {
         socket.userId = payload.id;
         socket.firstName = payload.firstName;
         socket.lastName = payload.lastName;
+        socket.username = payload.username;
         console.log(payload);
         next();
     } catch (err) {
@@ -94,6 +93,7 @@ io.use(async (socket, next) => {
     }
 });
 
+// event connection
 io.on('connection', (socket) => {
     console.log('New user connected');
     socket.on('disconnect', () => {
@@ -102,14 +102,14 @@ io.on('connection', (socket) => {
 
     //handle the new message event
     socket.on('send_message', async (data) => {
-        console.log(data.message, data.userId);
         const userData = await getById(data.userId);
-        console.log(socket.roomId);
         const newMessage = await db.Message.create({
             message: data.message,
             userId: data.userId,
             roomId: socket.roomId,
         });
+
+        // event receive_message
         io.in(`${socket.roomId}`).emit('receive_message', {
             message: [
                 {
@@ -124,8 +124,10 @@ io.on('connection', (socket) => {
         });
     });
 
-    socket.on('typing', (data) => {
-        socket.broadcast.emit('typing', { username: socket.username });
+    socket.on('typing', () => {
+        io.in(`${socket.roomId}`).emit('typing', {
+            firstName: socket.firstName,
+        });
     });
 
     socket.on('join', async (data) => {
@@ -133,7 +135,6 @@ io.on('connection', (socket) => {
             socket.userId < data.friendId
                 ? `${socket.userId}-${data.friendId}`
                 : `${data.friendId}-${socket.userId}`;
-        console.log(members);
 
         const existingRoom = await db.Room.findOne({ where: { members } });
         if (existingRoom) {
@@ -142,7 +143,6 @@ io.on('connection', (socket) => {
             const newRoom = await db.Room.create({ members });
             socket.roomId = newRoom.id;
         }
-        console.log(socket.roomId);
         socket.leaveAll();
         socket.join(`${socket.roomId}`);
 
@@ -161,13 +161,4 @@ io.on('connection', (socket) => {
     });
 });
 
-// ไม่ใช้นะ*****************************
-// *****Socket.io*****
-
-// server.listen(4000, () => {
-//     console.log('listening on port 4000');
-// });
-
-// // *****Socket.io*****
-// app.listen(8888, () => console.log('server running on port 8888'));
 server.listen(8888, () => console.log('server run on port 8888'));

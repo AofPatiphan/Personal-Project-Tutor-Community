@@ -15,8 +15,6 @@ function Findfriend() {
     const [friendPage, setFriendPage] = useState('All');
     const [search, setSearch] = useState('');
 
-    console.log(userData);
-
     const handleClickShowAllFriend = (e) => {
         e.preventDefault();
         setFriendPage('All');

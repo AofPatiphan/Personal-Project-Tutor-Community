@@ -8,7 +8,6 @@ const UserContext = createContext();
 
 function UserContextProvider(props) {
     const [userData, setUserData] = useState(null);
-    const [friend, setFriend] = useState([]);
     const [allFriend, setAllFriend] = useState([]);
     const [allRequestFriend, setAllRequestFriend] = useState([]);
     const [profileCard, setProfileCard] = useState([]);
@@ -69,22 +68,6 @@ function UserContextProvider(props) {
         getUserById();
     }, []);
 
-    // const updatePost = async (id, value) => {
-    //     const idx = post.findIndex((item) => item.id === id);
-    //     const newPost = [...post];
-    //     if (idx !== -1) {
-    //         newPost[idx] = { ...newPost[idx], ...{ caption: value } };
-    //     }
-    //     console.log(newPost[idx]);
-    //     const res = await axios.put(`/post/${id}`, newPost[idx]);
-    //     setPostHome(newPost);
-    // };
-
-    // // const deleteTodo = async (id) => {
-    // //     const res = await axios.delete(`/post/${id}`);
-    // //     const newTodo = todoList.filter((item) => item.id !== id);
-    // //     setTodoList(newTodo);
-    // // };
     if (!userData) {
         return <></>;
     }
@@ -96,7 +79,6 @@ function UserContextProvider(props) {
                 fetchUser,
                 setUserData,
                 request,
-                friend,
                 allFriend,
                 profileCard,
                 getUserById,

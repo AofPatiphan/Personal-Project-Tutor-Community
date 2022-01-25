@@ -4,13 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import * as localStorageService from '../services/localStorage';
 import { useContext } from 'react';
-import { UserContext } from '../contexts/UserContext';
 import { ErrContext } from '../contexts/ErrContext';
 const AuthContext = createContext();
 
 function AuthContextProvider(props) {
     const [user, setUser] = useState(null);
-    // const { fetchUser, setUserData } = useContext(UserContext);
     const { error, setError } = useContext(ErrContext);
     const [isLogin, setIsLogin] = useState('');
 
@@ -27,7 +25,6 @@ function AuthContextProvider(props) {
         await localStorageService.setToken(token);
         setUser(jwtDecode(token));
         setRole('user');
-        // fetchUser(token);
         setIsLogin('Login Completed');
         navigate('/');
     };
@@ -36,7 +33,6 @@ function AuthContextProvider(props) {
         localStorageService.removeToken();
         setUser(null);
         setRole('guest');
-        // setUserData(null);
         setIsLogin('');
         navigate('/login');
     };

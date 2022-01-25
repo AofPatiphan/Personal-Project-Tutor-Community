@@ -21,6 +21,7 @@ exports.getUserByUsername = async (req, res, next) => {
     }
 };
 
+// ใช้ตอน search จากชื่อ
 exports.getUserByName = async (req, res, next) => {
     try {
         const { name } = req.params;

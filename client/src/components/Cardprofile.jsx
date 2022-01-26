@@ -35,7 +35,7 @@ function Cardprofile({ profileData }) {
         setFriendById(res.data.friend || {});
         fetchPost();
         fetchPostProfile();
-        getAllFriendRequest();
+        // getAllFriendRequest(user.id);
     };
 
     const unFriend = async (id) => {

@@ -11,6 +11,16 @@ function AuthContextProvider(props) {
     const [user, setUser] = useState(null);
     const { error, setError } = useContext(ErrContext);
     const [isLogin, setIsLogin] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [role, setRole] = useState(localStorageService.getRole());
+    const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState('');
+    const [registerCompleted, setRegisterCompleted] = useState('');
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -36,17 +46,6 @@ function AuthContextProvider(props) {
         setIsLogin('');
         navigate('/login');
     };
-
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState(localStorageService.getRole());
-    const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState('');
-    const [registerCompleted, setRegisterCompleted] = useState('');
 
     const handleSubmitLogin = (e) => {
         e.preventDefault();

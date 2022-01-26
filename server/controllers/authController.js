@@ -29,6 +29,9 @@ exports.register = async (req, res, next) => {
         if (password === '' || password === null || password === undefined)
             return res.status(400).json({ message: 'Please input password' });
 
+        if (password !== confirmPassword)
+            return res.status(400).json({ message: 'Password is not match' });
+
         const existUsername = await User.findOne({ where: { username } });
         if (existUsername) {
             return res
@@ -36,6 +39,7 @@ exports.register = async (req, res, next) => {
                 .json({ message: 'username is already in use' });
         }
         const existEmail = await User.findOne({ where: { email } });
+
         if (existEmail) {
             return res.status(400).json({ message: 'email is already in use' });
         }

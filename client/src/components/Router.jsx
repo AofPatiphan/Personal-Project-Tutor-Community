@@ -16,6 +16,7 @@ import SocketContextProvider from '../contexts/SocketContext';
 import PostContextProvider from '../contexts/PostContext';
 import UserContextProvider from '../contexts/UserContext';
 import CommentContextProvider from '../contexts/CommentContext';
+import Search from '../pages/search/Search';
 
 const routes = {
     guest: [
@@ -30,6 +31,7 @@ const routes = {
         { path: '/findfriend', element: <Findfriend /> },
         { path: '/messenger/:id', element: <Messenger /> },
         { path: '/messenger/', element: <Messenger /> },
+        { path: '/search/', element: <Search /> },
         { path: '*', element: <Navigate to="/" replace={true} /> },
     ],
 };

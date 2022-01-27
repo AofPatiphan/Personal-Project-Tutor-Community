@@ -1,9 +1,29 @@
 const jwt = require('jsonwebtoken');
 const { About } = require('../dbs/models/index');
+const { sequelize } = require('../dbs/models/index');
+const { QueryTypes } = require('sequelize');
 
 exports.getMyAbout = async (req, res, next) => {
     try {
         const about = await About.findAll({ where: { userId: req.user.id } });
+        res.status(200).json({ about });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.getUserBySearch = async (req, res, next) => {
+    try {
+        const { subject, level, gender, charactor } = req.body;
+
+        const about = await sequelize.query(
+            `SELECT u.id as id, u.first_name as firstName , u.last_name as lastName , u.username as username , 
+            u.profile_url as profileUrl, a.caption as caption , a.charactor as charactor,a.subject as subject, 
+            a.level as level , a.gender as gender , a.phone_number as phoneNumber, a.education_level as educationLevel 
+            FROM users as u left join abouts as a on u.id = a.user_id
+            where charactor = '${charactor}' or subject = '${subject}' or level = '${level}' or gender = '${gender}' `,
+            { type: QueryTypes.SELECT }
+        );
         res.status(200).json({ about });
     } catch (err) {
         next(err);
@@ -80,9 +100,9 @@ exports.updateAbout = async (req, res, next) => {
     }
 };
 
-exports.deleteAbout = async (req, res, next) => {
-    try {
-    } catch (err) {
-        next(err);
-    }
-};
+// exports.deleteAbout = async (req, res, next) => {
+//     try {
+//     } catch (err) {
+//         next(err);
+//     }
+// };

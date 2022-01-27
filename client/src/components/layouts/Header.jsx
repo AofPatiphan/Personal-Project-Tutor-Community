@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { UserContext } from '../../contexts/UserContext';
@@ -6,11 +6,12 @@ import { useState } from 'react';
 
 function Header() {
     const { logout, user } = useContext(AuthContext);
-    const { userData, getUserById } = useContext(UserContext);
+    const { userData } = useContext(UserContext);
+    const [nav, setNav] = useState('Home');
 
     return (
         <div>
-            <div style={{ position: 'fixed', width: '100%' }}>
+            <div style={{ position: 'fixed', width: '100%', zIndex: '2' }}>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="container-fluid">
                         <button className="navbar-toggler" type="button">
@@ -26,6 +27,7 @@ function Header() {
                                     to={'/'}
                                     className="navbar-brand"
                                     style={{ color: '#1877F2' }}
+                                    onClick={() => setNav('Home')}
                                 >
                                     <img
                                         src="https://sv1.picz.in.th/images/2022/01/04/nN4KJR.png"
@@ -34,14 +36,18 @@ function Header() {
                                     />
                                 </Link>
                             </div>
-                            <div style={{ marginLeft: '100px' }}>
+                            <div style={{ marginLeft: '80px' }}>
                                 <ul className="navbar-nav  mb-2 mb-lg-0">
                                     <li
                                         className="nav-item "
                                         style={{
-                                            borderTop: '2px solid #1877F2',
+                                            borderTop: `${
+                                                nav === 'Home'
+                                                    ? '2px solid #1877F2'
+                                                    : ''
+                                            }`,
                                             width: '100px',
-                                            marginRight: '50px',
+                                            // marginRight: '50px',
                                         }}
                                     >
                                         <Link
@@ -49,9 +55,14 @@ function Header() {
                                             className="nav-link "
                                             aria-current="page"
                                             style={{
-                                                color: '#1877F2',
+                                                color: `${
+                                                    nav === 'Home'
+                                                        ? '#1877F2'
+                                                        : ''
+                                                }`,
                                                 textAlign: 'center',
                                             }}
+                                            onClick={() => setNav('Home')}
                                         >
                                             Home
                                         </Link>
@@ -59,29 +70,39 @@ function Header() {
                                     <li
                                         className="nav-item "
                                         style={{
-                                            width: '100px',
-                                            textAlign: 'center',
-                                            marginRight: '50px',
-                                        }}
-                                    >
-                                        <Link to={'/'} className="nav-link">
-                                            Notification
-                                        </Link>
-                                    </li>
-                                    <li
-                                        className="nav-item "
-                                        style={{
+                                            borderTop: `${
+                                                nav === 'Search'
+                                                    ? '2px solid #1877F2'
+                                                    : ''
+                                            }`,
                                             width: '100px',
                                             textAlign: 'center',
                                         }}
                                     >
-                                        <Link to={'/'} className="nav-link ">
+                                        <Link
+                                            to={'/search'}
+                                            className="nav-link "
+                                            style={{
+                                                color: `${
+                                                    nav === 'Search'
+                                                        ? '#1877F2'
+                                                        : ''
+                                                }`,
+                                                textAlign: 'center',
+                                            }}
+                                            onClick={() => setNav('Search')}
+                                        >
                                             Search
                                         </Link>
                                     </li>
                                     <li
                                         className="nav-item "
                                         style={{
+                                            borderTop: `${
+                                                nav === 'Chat'
+                                                    ? '2px solid #1877F2'
+                                                    : ''
+                                            }`,
                                             width: '100px',
                                             textAlign: 'center',
                                         }}
@@ -89,6 +110,14 @@ function Header() {
                                         <Link
                                             to={'/messenger'}
                                             className="nav-link "
+                                            style={{
+                                                color: `${
+                                                    nav === 'Chat'
+                                                        ? '#1877F2'
+                                                        : ''
+                                                }`,
+                                            }}
+                                            onClick={() => setNav('Chat')}
                                         >
                                             Chat
                                         </Link>
@@ -96,6 +125,11 @@ function Header() {
                                     <li
                                         className="nav-item "
                                         style={{
+                                            borderTop: `${
+                                                nav === 'Friend'
+                                                    ? '2px solid #1877F2'
+                                                    : ''
+                                            }`,
                                             width: '100px',
                                             textAlign: 'center',
                                         }}
@@ -103,6 +137,14 @@ function Header() {
                                         <Link
                                             to={'/findfriend'}
                                             className="nav-link "
+                                            style={{
+                                                color: `${
+                                                    nav === 'Friend'
+                                                        ? '#1877F2'
+                                                        : ''
+                                                }`,
+                                            }}
+                                            onClick={() => setNav('Friend')}
                                         >
                                             Friends
                                         </Link>
@@ -114,7 +156,9 @@ function Header() {
                                     <div
                                         className="ms-4"
                                         style={{
-                                            backgroundColor: 'blue',
+                                            backgroundColor: `${
+                                                nav === 'Profile' ? 'blue' : ''
+                                            }`,
                                             borderRadius: '50%',
                                             display: 'flex',
                                             justifyContent: 'center',
@@ -123,7 +167,10 @@ function Header() {
                                             width: '40px',
                                         }}
                                     >
-                                        <Link to={`/profile/${user.username}`}>
+                                        <Link
+                                            to={`/profile/${user.username}`}
+                                            onClick={() => setNav('Profile')}
+                                        >
                                             <img
                                                 src={`${userData.profileUrl}`}
                                                 alt="Profile logo"

@@ -28,6 +28,7 @@ exports.getAll = async (req, res, next) => {
                 excludes: ['password'],
             },
         });
+        // หา mutualfriend
         const mutualFriends = await friendDao.countMutualFriend({
             userId: req.user.id,
             friendsIds,

@@ -1,0 +1,15 @@
+.searchPage {
+    padding-top: 100px;
+    display: flex;
+    /* justify-content: center; */
+    /* flex-wrap: wrap; */
+    gap: 10px;
+    width: 900px;
+    /* position: relative; */
+}
+
+.formSelect {
+    margin: 50px 20px;
+    width: 400px;
+    flex-grow: 6;
+}

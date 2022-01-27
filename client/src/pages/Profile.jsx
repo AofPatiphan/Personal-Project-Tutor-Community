@@ -12,13 +12,14 @@ import { UserContext } from '../contexts/UserContext';
 import About from './About';
 
 function Profile() {
+    const { username } = useParams();
     const { user } = useContext(AuthContext);
 
     const { allFriend } = useContext(UserContext);
     const { postProfile, setPostProfile } = useContext(PostContext);
     const [person, setPerson] = useState('');
     const [isAboutPage, setIsAboutPage] = useState(false);
-    const { username } = useParams();
+    console.log(person);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -33,6 +34,7 @@ function Profile() {
         const fetchUser = async () => {
             const res = await axios.get(`/user/${username}`);
             setPerson(res.data.user);
+            console.log(res.data.user);
         };
 
         fetchUser();
@@ -40,9 +42,9 @@ function Profile() {
 
     const result = allFriend.findIndex((item) => item.username === username);
 
-    // if (!person) {
-    //     return <></>;
-    // }
+    if (!person) {
+        return <></>;
+    }
 
     return (
         <>
@@ -58,6 +60,7 @@ function Profile() {
                     setIsAboutPage={setIsAboutPage}
                     isAboutPage={isAboutPage}
                 />
+
                 {isAboutPage ? (
                     <About />
                 ) : (

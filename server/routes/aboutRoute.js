@@ -7,6 +7,7 @@ const auth = passport.authenticate('jwt-auth', { session: false });
 
 router.get('/:id', aboutController.getAboutById);
 router.post('/', auth, aboutController.createAbout);
+router.post('/search', auth, aboutController.getUserBySearch);
 router.put('/:id', auth, aboutController.updateAbout);
 
 module.exports = router;

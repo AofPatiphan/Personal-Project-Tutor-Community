@@ -16,13 +16,16 @@ function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
     const [isRequest, setIsRequest] = useState(false);
     const [friendById, setFriendById] = useState({});
     const [buttonStatus, setButtonStatus] = useState('');
-
+    console.log(person);
     useEffect(() => {
         fetchPost();
     }, [isRequest]);
-
     const getFriendRequestById = async (id) => {
+        console.log(id);
+        console.log(user);
+        console.log(person);
         const res = await axios.get(`/friend/${id}/${person.id}`);
+        console.log(res.data.friend);
         setFriendById(res.data.friend || {});
     };
 
@@ -49,6 +52,7 @@ function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
     useEffect(() => {
         getFriendRequestById(user.id);
     }, [username]);
+
     useEffect(() => {
         checkfriend();
     }, [friendById]);
@@ -81,7 +85,7 @@ function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
 
     const handleClickReject = async (e) => {
         e.preventDefault();
-        if (friendById.status) {
+        if (friendById.status === 'FRIEND') {
             await unFriend(user.id);
         }
     };
@@ -106,6 +110,7 @@ function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
             return setButtonStatus('Accept request');
         }
     };
+    console.log(person);
 
     return (
         <div

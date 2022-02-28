@@ -34,7 +34,6 @@ function Findfriend() {
     const handleSearchFriend = (e) => {
         e.preventDefault();
         getUserById(search);
-        // navigate('/findfriend');
         setSearch('');
     };
 
@@ -104,8 +103,11 @@ function Findfriend() {
                                 </li>
                             </ul>
                         </div>
-                        <div>
-                            <div className="d-flex">
+                        {friendPage === 'Find' ? (
+                            <form
+                                className="d-flex"
+                                onSubmit={handleSearchFriend}
+                            >
                                 <input
                                     className="form-control me-2"
                                     type="search"
@@ -114,15 +116,13 @@ function Findfriend() {
                                     style={{ borderRadius: '30px' }}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
-                                <button
-                                    className="btn"
-                                    type="submit"
-                                    onClick={handleSearchFriend}
-                                >
+                                <button className="btn" type="submit">
                                     <i className="bi bi-search"></i>
                                 </button>
-                            </div>
-                        </div>
+                            </form>
+                        ) : (
+                            <></>
+                        )}
                         {friendPage === 'All' ? (
                             allFriend.map((el) => {
                                 return (

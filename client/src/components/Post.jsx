@@ -4,9 +4,8 @@ import { useContext, useState } from 'react';
 import { PostContext } from '../contexts/PostContext';
 import { UserContext } from '../contexts/UserContext';
 import { AuthContext } from '../contexts/AuthContext';
-import YouTube from 'react-youtube';
 import Editblock from './Editblock';
-import axios from 'axios';
+import axios from '../config/axios';
 import timeSince from '../services/timeSince';
 
 function Post({
@@ -27,7 +26,7 @@ function Post({
 }) {
     const { username } = useParams();
 
-    const { deletePost, fetchPost, post, deletePostProfile, fetchPostProfile } =
+    const { deletePost, fetchPost, deletePostProfile, fetchPostProfile } =
         useContext(PostContext);
     const { userData } = useContext(UserContext);
     const { user } = useContext(AuthContext);
@@ -39,8 +38,6 @@ function Post({
         e.preventDefault();
         setHideboxEdit(true);
     };
-
-    // const countComment = post.find((item) => item.id === id);
 
     const handleClickDeletePost = async (e) => {
         e.preventDefault();
@@ -56,20 +53,26 @@ function Post({
         }
     };
 
-    const likePost = () => {
-        axios.post(`/post/like/${id}`).then((res) => {
+    const likePost = async () => {
+        try {
+            await axios.post(`/post/like/${id}`);
             setIsLike(true);
             fetchPost();
             fetchPostProfile(username);
-        });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
-    const unLikePost = () => {
-        axios.delete(`/post/like/${id}`).then((res) => {
+    const unLikePost = async () => {
+        try {
+            await axios.delete(`/post/like/${id}`);
             setIsLike(false);
             fetchPost();
             fetchPostProfile(username);
-        });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (

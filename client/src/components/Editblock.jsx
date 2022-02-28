@@ -4,7 +4,7 @@ import { useContext, useState } from 'react';
 import { PostContext } from '../contexts/PostContext';
 
 function Editblock({
-    postitem: { id, caption, userId, setHideboxEdit, hideboxEdit, User },
+    postitem: { id, caption, setHideboxEdit, hideboxEdit, User },
 }) {
     const { updatePost, updatePostProfile, fetchPost, fetchPostProfile } =
         useContext(PostContext);

@@ -19,12 +19,10 @@ function Profile() {
     const { postProfile, setPostProfile } = useContext(PostContext);
     const [person, setPerson] = useState('');
     const [isAboutPage, setIsAboutPage] = useState(false);
-    console.log(person);
 
     useEffect(() => {
         const fetchPost = async () => {
             const res = await axios.get(`/post/${username}`);
-            console.log(username);
             setPostProfile(res.data.posts);
         };
         fetchPost();
@@ -34,7 +32,6 @@ function Profile() {
         const fetchUser = async () => {
             const res = await axios.get(`/user/${username}`);
             setPerson(res.data.user);
-            console.log(res.data.user);
         };
 
         fetchUser();
@@ -68,7 +65,7 @@ function Profile() {
                         {user.username === username ? (
                             <Postbar person={person} />
                         ) : (
-                            ''
+                            <></>
                         )}
                         {postProfile.map((el) => {
                             if (result !== -1 || user.username === username) {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { PostContext } from '../contexts/PostContext';
@@ -12,88 +12,114 @@ function Cardprofile({ profileData }) {
     const { username } = useParams();
     const { user } = useContext(AuthContext);
     const { fetchPost, fetchPostProfile } = useContext(PostContext);
-    const { request, getAllFriendRequest } = useContext(UserContext);
-
+    const { request } = useContext(UserContext);
     const [friendById, setFriendById] = useState({});
     const [buttonStatus, setButtonStatus] = useState('');
+    const location = useLocation();
 
     const getFriendRequestById = async (id) => {
-        const res = await axios.get(`/friend/${id}/${profileData.id}`);
-        setFriendById(res.data.friend || {});
+        try {
+            const res = await axios.get(`/friend/${id}/${profileData.id}`);
+            setFriendById(res.data.friend || {});
+        } catch (err) {
+            console.log(err);
+        }
     };
     useEffect(() => {
         getFriendRequestById(user.id);
     }, [username]);
 
     const cancelRequest = async (id) => {
-        const res = await axios.delete(`/friend/${id}/${profileData.id}`);
-        setFriendById(res.data.friend || {});
+        try {
+            const res = await axios.delete(`/friend/${id}/${profileData.id}`);
+            setFriendById(res.data.friend || {});
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const acceptRequest = async (id) => {
-        const res = await axios.put(`/friend/${id}/${profileData.id}`);
-        setFriendById(res.data.friend || {});
-        fetchPost();
-        fetchPostProfile();
-        // getAllFriendRequest(user.id);
+        try {
+            const res = await axios.put(`/friend/${id}/${profileData.id}`);
+            setFriendById(res.data.friend || {});
+            fetchPost();
+            fetchPostProfile();
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const unFriend = async (id) => {
-        const res = await axios.delete(`/friend/${id}/${profileData.id}`);
-        setFriendById(res.data.friend || {});
-        fetchPost();
-        fetchPostProfile();
+        try {
+            const res = await axios.delete(`/friend/${id}/${profileData.id}`);
+            setFriendById(res.data.friend || {});
+            fetchPost();
+            fetchPostProfile();
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const handleClickRequest = async (e) => {
-        e.preventDefault();
-
-        if (!friendById.status) {
-            await request({ receiver: profileData.id, requester: user.id });
+        try {
+            e.preventDefault();
+            if (!friendById.status) {
+                await request({ receiver: profileData.id, requester: user.id });
+            }
+            if (
+                friendById.status === 'PENDONG' &&
+                user.id === friendById.request_by_id
+            ) {
+                await cancelRequest(user.id);
+            }
+            if (
+                friendById.status === 'PENDONG' &&
+                user.id === friendById.request_to_id
+            ) {
+                await acceptRequest(user.id);
+            }
+            if (friendById.status === 'FRIEND') {
+                await unFriend(user.id);
+            }
+            await getFriendRequestById(user.id);
+        } catch (err) {
+            console.log(err);
         }
-        if (
-            friendById.status === 'PENDONG' &&
-            user.id === friendById.request_by_id
-        ) {
-            await cancelRequest(user.id);
-        }
-        if (
-            friendById.status === 'PENDONG' &&
-            user.id === friendById.request_to_id
-        ) {
-            await acceptRequest(user.id);
-        }
-        if (friendById.status === 'FRIEND') {
-            await unFriend(user.id);
-        }
-        await getFriendRequestById(user.id);
     };
 
     const handleClickReject = async (e) => {
-        e.preventDefault();
-        if (friendById.status) {
-            await unFriend(user.id);
+        try {
+            e.preventDefault();
+            if (friendById.status) {
+                await unFriend(user.id);
+            }
+        } catch (err) {
+            console.log(err);
         }
     };
 
     const checkfriend = () => {
-        if (!friendById.status) {
-            return setButtonStatus('Request');
-        }
-        if (friendById.status === 'FRIEND') {
-            return setButtonStatus('Friend');
-        }
-        if (
-            friendById.status === 'PENDONG' &&
-            user.id === friendById.request_by_id
-        ) {
-            return setButtonStatus('Cancel request');
-        }
-        if (
-            friendById.status === 'PENDONG' &&
-            user.id === friendById.request_to_id
-        ) {
-            return setButtonStatus('Accept request');
+        try {
+            if (!friendById.status) {
+                return setButtonStatus('Request');
+            }
+            if (friendById.status === 'FRIEND') {
+                return setButtonStatus('Friend');
+            }
+            if (
+                friendById.status === 'PENDONG' &&
+                user.id === friendById.request_by_id
+            ) {
+                return setButtonStatus('Cancel request');
+            }
+            if (
+                friendById.status === 'PENDONG' &&
+                user.id === friendById.request_to_id
+            ) {
+                return setButtonStatus('Accept request');
+            }
+        } catch (err) {
+            console.log(err);
         }
     };
     useEffect(() => {
@@ -129,7 +155,11 @@ function Cardprofile({ profileData }) {
                         <h5 className="card-title">
                             {`${profileData.firstName} ${profileData.lastName}`}
                         </h5>
-                        <p> {profileData.mutualFriend} mutual friend</p>
+                        {location.pathname === '/search' ? (
+                            <></>
+                        ) : (
+                            <p> {profileData.mutualFriend} mutual friend</p>
+                        )}
                     </div>
                     <div style={{ paddingTop: '28px' }}>
                         <div style={{ marginTop: '20px' }}>

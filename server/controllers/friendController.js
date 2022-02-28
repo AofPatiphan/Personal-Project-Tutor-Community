@@ -191,9 +191,7 @@ exports.request = async (req, res, next) => {
 exports.cancelRequest = async (req, res, next) => {
     try {
         const { id1, id2 } = req.params;
-        console.log(id1);
-        console.log(id2);
-        const result = await Friend.destroy({
+        await Friend.destroy({
             where: {
                 [Op.or]: [
                     { request_by_id: id1, request_to_id: id2 },

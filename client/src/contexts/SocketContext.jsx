@@ -17,7 +17,6 @@ function SocketContextProvider(props) {
         });
         socket?.on('room-data', ({ roomData, chatRoomId }) => {
             setRoomId(chatRoomId);
-            console.log(roomData);
             const temp = roomData.map((item) => {
                 return {
                     message: item.message,
@@ -29,7 +28,6 @@ function SocketContextProvider(props) {
                 };
             });
             setMessages(temp);
-            console.log(temp);
         });
         socket?.on('typing', ({ firstName }) => {
             setTypingStatus(true);
@@ -51,7 +49,6 @@ function SocketContextProvider(props) {
 
     // join room
     const fetchMessage = async (id) => {
-        console.log(userData);
         await socket?.emit('join', { friendId: id });
     };
 

@@ -11,9 +11,6 @@ import { useState } from 'react';
 function Postblock() {
     const { username } = useParams();
 
-    // const modalEl = useRef()
-    // const imgInputEl = useRef()
-
     const {
         title,
         setTitle,
@@ -30,9 +27,6 @@ function Postblock() {
     const [picture, setPicture] = useState('');
 
     const handleFileInputChange = async (e) => {
-        // e.preventDefault();
-        // imgInputEl.current.value = null
-
         setLoading(true);
         if (!e.target.value) return;
 
@@ -83,7 +77,6 @@ function Postblock() {
         setHideboxPost(false);
         setPicture('');
         setTitle('');
-        // imgInputEl.current.value = null
     };
 
     return (
@@ -192,7 +185,7 @@ function Postblock() {
                                 onChange={handleFileInputChange}
                             />
                         </div>
-                        {!loading ? (
+                        {title || !loading ? (
                             <button
                                 type="submit"
                                 className="btn btn-primary mb-3 "

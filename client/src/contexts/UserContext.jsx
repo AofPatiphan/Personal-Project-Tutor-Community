@@ -15,10 +15,14 @@ function UserContextProvider(props) {
     // Get data profile
     const token = localStorage.getItem('token');
 
-    const fetchUser = async (tokenInput) => {
-        const a = jwtDecode(token || tokenInput);
-        const res = await axios.get(`/user/${a.username}`);
-        setUserData(res.data.user);
+    const fetchUser = async () => {
+        try {
+            const a = jwtDecode(token);
+            const res = await axios.get(`/user/${a.username}`);
+            setUserData(res.data.user);
+        } catch (err) {
+            console.log(err);
+        }
     };
     useEffect(() => {
         if (token) {
@@ -34,17 +38,24 @@ function UserContextProvider(props) {
 
     // request friend
     const request = async ({ receiver, requester }) => {
-        console.log(receiver);
-        const res = await axios.post(`/friend`, {
-            requestToId: receiver,
-            requestById: requester,
-        });
+        try {
+            await axios.post(`/friend`, {
+                requestToId: receiver,
+                requestById: requester,
+            });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     // Get Allfriends
-    const getAllFriend = async (id) => {
-        const res = await axios.get(`/friend`);
-        setAllFriend(res.data.users || {});
+    const getAllFriend = async () => {
+        try {
+            const res = await axios.get(`/friend`);
+            setAllFriend(res.data.users || {});
+        } catch (err) {
+            console.log(err);
+        }
     };
     useEffect(() => {
         getAllFriend();
@@ -52,21 +63,23 @@ function UserContextProvider(props) {
 
     // Get Allfriends Request ใช้กับหน้า search
     const getAllRequest = async (id) => {
-        const res = await axios.get(`/friend/${id}`);
-        setAllRequestFriend(res.data.users || {});
+        try {
+            const res = await axios.get(`/friend/${id}`);
+            setAllRequestFriend(res.data.users || {});
+        } catch (err) {
+            console.log(err);
+        }
     };
-    useEffect(() => {
-        getAllRequest();
-    }, []);
 
     // search จากชื่อ
     const getUserById = async (name) => {
-        const res = await axios.get(`/user/name/${name}`);
-        setProfileCard(res.data.user || {});
+        try {
+            const res = await axios.get(`/user/name/${name}`);
+            setProfileCard(res.data.user || {});
+        } catch (err) {
+            console.log(err);
+        }
     };
-    useEffect(() => {
-        getUserById();
-    }, []);
 
     if (!userData) {
         return <></>;

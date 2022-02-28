@@ -38,7 +38,6 @@ const routes = {
 
 function Router() {
     const { user, role } = useContext(AuthContext);
-    // const { userData } = useContext(UserContext);
 
     if (role == 'user' && !user) {
         return (

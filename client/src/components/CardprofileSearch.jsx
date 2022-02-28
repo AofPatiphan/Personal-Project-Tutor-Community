@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { PostContext } from '../contexts/PostContext';
@@ -9,70 +9,88 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function Cardprofile({ profileData }) {
-    const { username } = useParams();
     const { user } = useContext(AuthContext);
     const { fetchPost, fetchPostProfile } = useContext(PostContext);
-    const { request, getAllFriendRequest } = useContext(UserContext);
+    const { request } = useContext(UserContext);
 
     const [friendById, setFriendById] = useState({});
     const [buttonStatus, setButtonStatus] = useState('');
 
     const getFriendRequestById = async (id) => {
-        const res = await axios.get(`/friend/${id}/${profileData.id}`);
-        setFriendById(res.data.friend || {});
+        try {
+            const res = await axios.get(`/friend/${id}/${profileData.id}`);
+            setFriendById(res.data.friend || {});
+        } catch (err) {
+            console.log(err);
+        }
     };
-    useEffect(() => {
-        getFriendRequestById(user.id);
-    }, [username]);
 
     const cancelRequest = async (id) => {
-        const res = await axios.delete(`/friend/${id}/${profileData.id}`);
-        setFriendById(res.data.friend || {});
+        try {
+            const res = await axios.delete(`/friend/${id}/${profileData.id}`);
+            setFriendById(res.data.friend || {});
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const acceptRequest = async (id) => {
-        const res = await axios.put(`/friend/${id}/${profileData.id}`);
-        setFriendById(res.data.friend || {});
-        fetchPost();
-        fetchPostProfile();
-        // getAllFriendRequest(user.id);
+        try {
+            const res = await axios.put(`/friend/${id}/${profileData.id}`);
+            setFriendById(res.data.friend || {});
+            fetchPost();
+            fetchPostProfile();
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const unFriend = async (id) => {
-        const res = await axios.delete(`/friend/${id}/${profileData.id}`);
-        setFriendById(res.data.friend || {});
-        fetchPost();
-        fetchPostProfile();
+        try {
+            const res = await axios.delete(`/friend/${id}/${profileData.id}`);
+            setFriendById(res.data.friend || {});
+            fetchPost();
+            fetchPostProfile();
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const handleClickRequest = async (e) => {
-        e.preventDefault();
-
-        if (!friendById.status) {
-            await request({ receiver: profileData.id, requester: user.id });
+        try {
+            e.preventDefault();
+            if (!friendById.status) {
+                await request({ receiver: profileData.id, requester: user.id });
+            }
+            if (
+                friendById.status === 'PENDONG' &&
+                user.id === friendById.request_by_id
+            ) {
+                await cancelRequest(user.id);
+            }
+            if (
+                friendById.status === 'PENDONG' &&
+                user.id === friendById.request_to_id
+            ) {
+                await acceptRequest(user.id);
+            }
+            if (friendById.status === 'FRIEND') {
+                await unFriend(user.id);
+            }
+            await getFriendRequestById(user.id);
+        } catch (err) {
+            console.log(err);
         }
-        if (
-            friendById.status === 'PENDONG' &&
-            user.id === friendById.request_by_id
-        ) {
-            await cancelRequest(user.id);
-        }
-        if (
-            friendById.status === 'PENDONG' &&
-            user.id === friendById.request_to_id
-        ) {
-            await acceptRequest(user.id);
-        }
-        if (friendById.status === 'FRIEND') {
-            await unFriend(user.id);
-        }
-        await getFriendRequestById(user.id);
     };
 
     const handleClickReject = async (e) => {
-        e.preventDefault();
-        if (friendById.status) {
-            await unFriend(user.id);
+        try {
+            e.preventDefault();
+            if (friendById.status) {
+                await unFriend(user.id);
+            }
+        } catch (err) {
+            console.log(err);
         }
     };
 

@@ -27,9 +27,7 @@ export default function Messenger() {
 
     const { id } = useParams();
     useEffect(() => {
-        console.log('fetch', id);
         if (id) {
-            console.log('fetch2');
             fetchMessage(id);
         }
         fetchFriendList();

@@ -14,13 +14,17 @@ function Search() {
     const [about, setAbout] = useState([]);
 
     const getUserByAbout = async () => {
-        const res = await axios.post(`/about/search`, {
-            subject,
-            level,
-            gender,
-            charactor,
-        });
-        setAbout(res.data.about || {});
+        try {
+            const res = await axios.post(`/about/search`, {
+                subject,
+                level,
+                gender,
+                charactor,
+            });
+            setAbout(res.data.about || {});
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     useEffect(() => {

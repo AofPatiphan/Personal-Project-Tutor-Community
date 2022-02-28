@@ -86,7 +86,6 @@ io.use(async (socket, next) => {
         socket.firstName = payload.firstName;
         socket.lastName = payload.lastName;
         socket.username = payload.username;
-        console.log(payload);
         next();
     } catch (err) {
         socket.emit('token-expired', { message: 'token-expired' });

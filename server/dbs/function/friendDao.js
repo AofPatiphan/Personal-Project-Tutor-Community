@@ -30,7 +30,6 @@ const countMutualFriend = async ({ userId: id1, friendsIds }) => {
                 const mutualFriendInfo = await User.findAll({
                     where: {
                         id: mutualfriend.map((el) => el.mutualFriend),
-                        // id: mutualfriend.map((el) => el.otherFriendId),
                     },
                 });
                 mutualFriends[id2] = mutualFriendInfo;

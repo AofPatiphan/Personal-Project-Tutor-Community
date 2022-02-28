@@ -59,10 +59,6 @@ app.use((err, req, res, next) => {
 
 // *****socket.io*****
 
-// app.get('/', (req, res) => {
-//     res.render('app');
-// });
-
 // Initialize socket for the server
 const jwt = require('jsonwebtoken');
 const http = require('http'); //setup socket.io

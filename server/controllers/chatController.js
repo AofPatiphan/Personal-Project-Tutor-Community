@@ -1,8 +1,5 @@
-const { Room, sequelize } = require('../dbs/models/index');
+const { sequelize } = require('../dbs/models/index');
 const { QueryTypes } = require('sequelize');
-
-const { Op } = require('sequelize');
-// const friendDao = require('../dbs/function/friendDao');
 
 exports.getAllChatFriend = async (req, res, next) => {
     try {
@@ -12,7 +9,7 @@ exports.getAllChatFriend = async (req, res, next) => {
             FROM rooms as r 
             left join (select room_id,message,created_at,rank() over(partition by room_id order by created_at desc) rw from messages ) as m on r.id = m.room_id and m.rw = 1
             left join users as u on SUBSTRING_INDEX(r.members, '-', 1)!=${userId} and SUBSTRING_INDEX(r.members, '-', 1)=u.id  or SUBSTRING_INDEX(r.members, '-', -1)!=${userId} and SUBSTRING_INDEX(r.members, '-', -1)=u.id
-            where SUBSTRING_INDEX(r.members, '-', 1) = ${userId} or SUBSTRING_INDEX(r.members, '-',-1) =${userId}`,
+            where SUBSTRING_INDEX(r.members, '-', 1) = ${userId} or SUBSTRING_INDEX(r.members, '-',-1) =${userId} order by updateTimeMessage DESC`,
             { type: QueryTypes.SELECT }
         );
         res.status(200).json({ rooms });

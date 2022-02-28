@@ -31,6 +31,7 @@ function UserContextProvider(props) {
                     token: localStorageService.getToken(),
                 },
             });
+            console.log(newSocket);
             setSocket(newSocket);
             fetchUser();
         }

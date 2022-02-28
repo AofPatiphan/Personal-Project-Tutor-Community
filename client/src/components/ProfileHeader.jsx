@@ -6,13 +6,13 @@ import { AuthContext } from '../contexts/AuthContext';
 import { PostContext } from '../contexts/PostContext';
 import { UserContext } from '../contexts/UserContext';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../config/axios';
 
 function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
     const { username } = useParams();
     const { user } = useContext(AuthContext);
     const { fetchPost, fetchPostProfile } = useContext(PostContext);
-    const { request, getAllFriendRequest } = useContext(UserContext);
+    const { request, getAllRequest } = useContext(UserContext);
     const [isRequest, setIsRequest] = useState(false);
     const [friendById, setFriendById] = useState({});
     const [buttonStatus, setButtonStatus] = useState('');
@@ -33,8 +33,8 @@ function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
         const res = await axios.put(`/friend/${id}/${person.id}`);
         setFriendById(res.data.friend || {});
         fetchPost();
-        fetchPostProfile();
-        getAllFriendRequest();
+        fetchPostProfile(username);
+        getAllRequest(id);
     };
 
     const unFriend = async (id) => {

@@ -6,7 +6,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { PostContext } from '../contexts/PostContext';
 import { UserContext } from '../contexts/UserContext';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../config/axios';
 
 function Cardprofile({ profileData }) {
     const { username } = useParams();

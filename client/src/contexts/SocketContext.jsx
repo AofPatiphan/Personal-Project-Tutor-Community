@@ -4,9 +4,8 @@ import { UserContext } from '../contexts/UserContext';
 const SocketContext = createContext();
 
 function SocketContextProvider(props) {
-    const { socket, userData, setSocket } = useContext(UserContext);
+    const { socket } = useContext(UserContext);
     const [messages, setMessages] = useState([]);
-    const [roomId, setRoomId] = useState([]);
     const [typingStatus, setTypingStatus] = useState(false);
     const [typingName, setTypingName] = useState(null);
 
@@ -15,8 +14,7 @@ function SocketContextProvider(props) {
         socket?.on('receive_message', ({ message }) => {
             setMessages((currentMessage) => [...currentMessage, ...message]);
         });
-        socket?.on('room-data', ({ roomData, chatRoomId }) => {
-            setRoomId(chatRoomId);
+        socket?.on('room-data', ({ roomData }) => {
             const temp = roomData.map((item) => {
                 return {
                     message: item.message,

@@ -151,7 +151,6 @@ io.on('connection', (socket) => {
         });
         io.in(`${socket.roomId}`).emit('room-data', {
             roomData,
-            chatRoomId: socket.roomId,
         });
     });
 });

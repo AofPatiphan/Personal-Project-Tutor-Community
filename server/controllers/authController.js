@@ -1,4 +1,4 @@
-const { User } = require('../dbs/models/index');
+const { User, About } = require('../dbs/models/index');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -45,13 +45,17 @@ exports.register = async (req, res, next) => {
         }
 
         const hashed = await bcrypt.hash(password, 12);
-        await User.create({
+        const user = await User.create({
             firstName,
             lastName,
             username,
             email,
             profileUrl,
             password: hashed,
+        });
+
+        await About.create({
+            userId: user.id,
         });
 
         res.json({ message: 'user created', username, email });

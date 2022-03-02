@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { About } = require('../dbs/models/index');
+const { About, User } = require('../dbs/models/index');
 const { sequelize } = require('../dbs/models/index');
 const { QueryTypes } = require('sequelize');
 
@@ -71,30 +71,50 @@ exports.createAbout = async (req, res, next) => {
 
 exports.updateAbout = async (req, res, next) => {
     try {
-        const { firstName, lastName, picture, charactor } = req.body;
+        const {
+            caption,
+            gender,
+            charactor,
+            subject,
+            level,
+            phoneNumber,
+            educationLevel,
+        } = req.body;
         const { id } = req.params;
 
         const [affectedRow] = await About.update(
             {
-                firstName,
-                lastName,
-                picture,
+                caption,
+                gender,
                 charactor,
+                subject,
+                level,
+                phoneNumber,
+                educationLevel,
             },
             {
                 where: {
-                    id,
                     userId: req.user.id,
                 },
             }
         );
         if (affectedRow === 0) {
-            res.status(400).json({ message: 'cannot update todo' });
+            res.status(400).json({ message: 'cannot update about' });
         }
 
-        const about = await About.findOne({ where: { id } });
+        const user = await User.findOne({
+            where: { id },
+            include: [
+                {
+                    model: About,
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt'],
+                    },
+                },
+            ],
+        });
 
-        res.status(200).json({ about });
+        res.status(200).json({ user });
     } catch (err) {
         next(err);
     }

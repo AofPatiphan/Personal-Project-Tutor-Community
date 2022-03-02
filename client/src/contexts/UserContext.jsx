@@ -20,6 +20,7 @@ function UserContextProvider(props) {
             const a = jwtDecode(token);
             const res = await axios.get(`/user/${a.username}`);
             setUserData(res.data.user);
+            console.log(res.data.user);
         } catch (err) {
             console.log(err);
         }

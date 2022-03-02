@@ -1,10 +1,14 @@
-const { User } = require('../dbs/models/index');
+const { User, About } = require('../dbs/models/index');
 const { Op } = require('sequelize');
 const friendDao = require('../dbs/function/friendDao');
 
 exports.getAllUser = async (req, res, next) => {
     try {
-        const users = await User.findAll();
+        const users = await User.findAll({
+            attributes: {
+                excludes: ['password'],
+            },
+        });
         res.status(200).json({ users });
     } catch (err) {
         next(err);
@@ -14,7 +18,20 @@ exports.getAllUser = async (req, res, next) => {
 exports.getUserByUsername = async (req, res, next) => {
     try {
         const { username } = req.params;
-        const user = await User.findOne({ where: { username } });
+        const user = await User.findOne({
+            where: { username },
+            attributes: {
+                exclude: ['password'],
+            },
+            include: [
+                {
+                    model: About,
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt'],
+                    },
+                },
+            ],
+        });
         res.status(200).json({ user });
     } catch (err) {
         next(err);
@@ -33,6 +50,9 @@ exports.getUserByName = async (req, res, next) => {
                         { lastName: { [Op.like]: `%${name}%` } },
                     ],
                     [Op.not]: { firstName: req.user.firstName },
+                },
+                attributes: {
+                    excludes: ['password'],
                 },
             });
             const userId = users.map((user) => user.id);

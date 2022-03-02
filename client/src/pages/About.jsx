@@ -1,7 +1,9 @@
 import React from 'react';
-import ProfileHeader from '../components/ProfileHeader';
+import { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 
 function About() {
+    const { userData } = useContext(UserContext);
     return (
         <>
             <div
@@ -16,23 +18,25 @@ function About() {
             >
                 <h1 style={{ marginBottom: '50px' }}>About</h1>
                 <div style={{ marginBottom: '10px' }}>
-                    Caption : <br /> Lorem ipsum dolor sit amet consectetur,
-                    adipisicing elit. Mollitia, dolorum repellendus rem cum
-                    perferendis unde, iusto, reiciendis sit minima laudantium
-                    temporibus delectus nobis sunt nulla fugiat neque excepturi
-                    rerum a.
-                </div>
-                <div style={{ marginBottom: '10px' }}>Gender : Male</div>
-                <div style={{ marginBottom: '10px' }}>Charactor : Tutor</div>
-                <div style={{ marginBottom: '10px' }}>
-                    Subject : Mathematics
-                </div>
-                <div style={{ marginBottom: '10px' }}>Level : High school</div>
-                <div style={{ marginBottom: '10px' }}>
-                    Phone Number : 0889697882
+                    Caption : <br /> {userData.About.caption}
                 </div>
                 <div style={{ marginBottom: '10px' }}>
-                    Education Level : Bachelor's degree
+                    Gender : {userData.About.gender}
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                    Charactor : {userData.About.charactor}
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                    Subject : {userData.About.subject}
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                    Level : {userData.About.level}
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                    Phone Number : {userData.About.phoneNumber}
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                    Education Level : {userData.About.educationLevel}
                 </div>
             </div>
         </>

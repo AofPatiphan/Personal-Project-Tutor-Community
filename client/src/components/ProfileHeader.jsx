@@ -7,6 +7,7 @@ import { PostContext } from '../contexts/PostContext';
 import { UserContext } from '../contexts/UserContext';
 import { useState, useEffect } from 'react';
 import axios from '../config/axios';
+import EditAbout from './EditAbout';
 
 function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
     const { username } = useParams();
@@ -107,124 +108,114 @@ function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
     };
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                height: '400px',
-                width: '900px',
-                flexDirection: 'column',
-                alignItems: 'center',
-                marginBottom: '60px',
-            }}
-        >
-            <div
-                style={{
-                    backgroundImage:
-                        'url("https://sv1.picz.in.th/images/2022/01/11/nK6VPD.jpg")',
-                    borderRadius: '8px',
-                    width: '900px',
-                    height: '250px',
-                    textAlign: 'center',
-                }}
-            >
-                <div style={{ paddingTop: '160px' }}>
-                    <img
-                        src={`${person.profileUrl}`}
-                        alt="Profile picture"
-                        style={{
-                            width: '130px',
-                            height: '130px',
-                            objectFit: 'cover',
-                            borderRadius: '50%',
-                        }}
-                    />
-                </div>
-            </div>
-            <div>
-                <h2 style={{ paddingTop: '50px', textAlign: 'center' }}>
-                    {`${person.firstName} ${person.lastName} `}
-                </h2>
-            </div>
+        <>
             <div
                 style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    paddingTop: '20px',
-                    borderTop: '2px solid #CFD0D4',
-                    width: '800px',
-                    marginTop: '10px',
+                    height: '400px',
+                    width: '900px',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginBottom: '60px',
                 }}
             >
-                <div>
-                    <ul
-                        style={{
-                            display: 'flex',
-                            listStyle: 'none',
-                            padding: '0',
-                        }}
-                    >
-                        <li
+                <div
+                    style={{
+                        backgroundImage:
+                            'url("https://sv1.picz.in.th/images/2022/01/11/nK6VPD.jpg")',
+                        borderRadius: '8px',
+                        width: '900px',
+                        height: '250px',
+                        textAlign: 'center',
+                    }}
+                >
+                    <div style={{ paddingTop: '160px' }}>
+                        <img
+                            src={`${person.profileUrl}`}
+                            alt="Profile picture"
                             style={{
-                                borderBottom: isAboutPage
-                                    ? ``
-                                    : `2px solid #1877F2`,
-                                width: '100px',
+                                width: '130px',
+                                height: '130px',
+                                objectFit: 'cover',
+                                borderRadius: '50%',
                             }}
-                        >
-                            <Link
-                                to={'#'}
-                                className="nav-link "
-                                aria-current="page"
-                                style={{
-                                    color: isAboutPage ? '#66676B' : '#1877F2',
-                                    textAlign: 'center',
-                                }}
-                                onClick={() => setIsAboutPage(false)}
-                            >
-                                Post
-                            </Link>
-                        </li>
-                        <li
-                            style={{
-                                borderBottom: !isAboutPage
-                                    ? ``
-                                    : `2px solid #1877F2`,
-                                width: '100px',
-                                textAlign: 'center',
-                            }}
-                        >
-                            <Link
-                                to={'#'}
-                                className="nav-link"
-                                style={{
-                                    color: !isAboutPage ? '#66676B' : '#1877F2',
-                                    textAlign: 'center',
-                                }}
-                                onClick={() => setIsAboutPage(true)}
-                            >
-                                About
-                            </Link>
-                        </li>
-                    </ul>
+                        />
+                    </div>
                 </div>
                 <div>
-                    {user.username !== username ? (
-                        <>
-                            <button
+                    <h2 style={{ paddingTop: '50px', textAlign: 'center' }}>
+                        {`${person.firstName} ${person.lastName} `}
+                    </h2>
+                </div>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        paddingTop: '20px',
+                        borderTop: '2px solid #CFD0D4',
+                        width: '800px',
+                        marginTop: '10px',
+                    }}
+                >
+                    <div>
+                        <ul
+                            style={{
+                                display: 'flex',
+                                listStyle: 'none',
+                                padding: '0',
+                            }}
+                        >
+                            <li
                                 style={{
-                                    borderRadius: '8px',
-                                    background: '#E5E6EB',
-                                    border: '0',
-                                    padding: '3px 15px',
-                                    marginRight: '30px',
+                                    borderBottom: isAboutPage
+                                        ? ``
+                                        : `2px solid #1877F2`,
+                                    width: '100px',
                                 }}
-                                onClick={handleClickRequest}
                             >
-                                {buttonStatus}
-                            </button>
-                            {friendById.status === 'PENDONG' &&
-                            friendById.request_by_id === person.id &&
-                            user.id === friendById.request_to_id ? (
+                                <Link
+                                    to={'#'}
+                                    className="nav-link "
+                                    aria-current="page"
+                                    style={{
+                                        color: isAboutPage
+                                            ? '#66676B'
+                                            : '#1877F2',
+                                        textAlign: 'center',
+                                    }}
+                                    onClick={() => setIsAboutPage(false)}
+                                >
+                                    Post
+                                </Link>
+                            </li>
+                            <li
+                                style={{
+                                    borderBottom: !isAboutPage
+                                        ? ``
+                                        : `2px solid #1877F2`,
+                                    width: '100px',
+                                    textAlign: 'center',
+                                }}
+                            >
+                                <Link
+                                    to={'#'}
+                                    className="nav-link"
+                                    style={{
+                                        color: !isAboutPage
+                                            ? '#66676B'
+                                            : '#1877F2',
+                                        textAlign: 'center',
+                                    }}
+                                    onClick={() => setIsAboutPage(true)}
+                                >
+                                    About
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        {user.username !== username ? (
+                            <>
                                 <button
                                     style={{
                                         borderRadius: '8px',
@@ -233,34 +224,53 @@ function ProfileHeader({ person, setIsAboutPage, isAboutPage }) {
                                         padding: '3px 15px',
                                         marginRight: '30px',
                                     }}
-                                    onClick={handleClickReject}
+                                    onClick={handleClickRequest}
                                 >
-                                    {'Reject'}
+                                    {buttonStatus}
                                 </button>
-                            ) : (
-                                <></>
-                            )}
-                        </>
-                    ) : (
-                        <></>
-                    )}
-                    {user.username === username ? (
-                        <button
-                            style={{
-                                borderRadius: '8px',
-                                background: '#E5E6EB',
-                                border: '0',
-                                padding: '3px 15px',
-                            }}
-                        >
-                            Edit Profile
-                        </button>
-                    ) : (
-                        <></>
-                    )}
+                                {friendById.status === 'PENDONG' &&
+                                friendById.request_by_id === person.id &&
+                                user.id === friendById.request_to_id ? (
+                                    <button
+                                        style={{
+                                            borderRadius: '8px',
+                                            background: '#E5E6EB',
+                                            border: '0',
+                                            padding: '3px 15px',
+                                            marginRight: '30px',
+                                        }}
+                                        onClick={handleClickReject}
+                                    >
+                                        {'Reject'}
+                                    </button>
+                                ) : (
+                                    <></>
+                                )}
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                        {user.username === username ? (
+                            <button
+                                style={{
+                                    borderRadius: '8px',
+                                    background: '#E5E6EB',
+                                    border: '0',
+                                    padding: '3px 15px',
+                                }}
+                                data-bs-toggle="modal"
+                                data-bs-target="#EditProfileModal"
+                            >
+                                Edit Profile
+                            </button>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+            <EditAbout />
+        </>
     );
 }
 
